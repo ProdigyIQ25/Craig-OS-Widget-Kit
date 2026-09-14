@@ -1,5 +1,5 @@
 export type Property = Record<string, unknown> & { type?: string };
-export type NotionRow = { id: string; last_edited_time?: string; properties: Record<string, Property> };
+export type NotionRow = { id: string; url?: string; last_edited_time?: string; properties: Record<string, Property> };
 
 export function value(row: NotionRow, name: string): string | number | boolean | null {
   const property = row.properties[name] as Record<string, unknown> | undefined;
