@@ -4,7 +4,7 @@ const routes=["clock","focus","session","mode","media","quick-capture","executiv
 const widths=[320,390,768,1024];
 
 for(const route of routes) for(const width of widths) test(`${route} is embed-safe at ${width}px`,async({page})=>{
-  const errors:string[]=[];page.on("console",message=>{if(message.type()==="error")errors.push(message.text())});
+  const errors:string[]=[];page.on("console",message=>{if(message.type()==="error"||message.type()==="warning")errors.push(message.text())});
   await page.setViewportSize({width,height:720});await page.goto(`/widgets/${route}`);await expect(page.locator("main")).toBeVisible();
   const overflow=await page.evaluate(()=>document.documentElement.scrollWidth>document.documentElement.clientWidth);
   expect(overflow).toBeFalsy();expect(errors).toEqual([]);
