@@ -1,0 +1,31 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - paragraph [ref=e5]: FOUNDATION DEMO
+        - heading "Craig OS Widget Kit" [level=1] [ref=e6]
+        - paragraph [ref=e7]:
+          - text: A secure, embed-safe interaction shell.
+          - strong [ref=e8]: DEMO DATA
+      - generic "Version 0.1.0" [ref=e9]: v0.1.0
+    - region [ref=e10]:
+      - paragraph [ref=e11]: Theme
+      - generic [ref=e12]:
+        - button "Business" [pressed] [ref=e13] [cursor=pointer]
+        - button "Personal" [ref=e14] [cursor=pointer]
+        - button "Compact" [ref=e15] [cursor=pointer]
+    - region [ref=e16]:
+      - paragraph [ref=e17]: Foundation state
+      - generic [ref=e18]:
+        - button "Success" [ref=e19] [cursor=pointer]
+        - button "Loading" [ref=e20] [cursor=pointer]
+        - button "Empty" [ref=e21] [cursor=pointer]
+        - button "Error" [active] [pressed] [ref=e22] [cursor=pointer]
+        - button "Unauthorized" [ref=e23] [cursor=pointer]
+        - button "Not configured" [ref=e24] [cursor=pointer]
+    - alert [ref=e45]:
+      - paragraph [ref=e46]: ERROR
+      - heading "Data unavailable" [level=2] [ref=e47]
+      - paragraph [ref=e48]: The source could not be reached. No live state has been fabricated.
+    - generic [ref=e38]: Generic UI proof only · No Notion writes · No production widget behavior
+  - alert [ref=e40]

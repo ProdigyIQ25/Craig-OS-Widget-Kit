@@ -1,0 +1,40 @@
+- generic [ref=e1]:
+  - main [ref=e2]:
+    - generic [ref=e3]:
+      - generic [ref=e4]:
+        - paragraph [ref=e5]: FOUNDATION DEMO
+        - heading "Craig OS Widget Kit" [level=1] [ref=e6]
+        - paragraph [ref=e7]:
+          - text: A secure, embed-safe interaction shell.
+          - strong [ref=e8]: DEMO DATA
+      - generic "Version 0.1.0" [ref=e9]: v0.1.0
+    - region [ref=e10]:
+      - paragraph [ref=e11]: Theme
+      - generic [ref=e12]:
+        - button "Business" [pressed] [ref=e13] [cursor=pointer]
+        - button "Personal" [ref=e14] [cursor=pointer]
+        - button "Compact" [ref=e15] [cursor=pointer]
+    - region [ref=e16]:
+      - paragraph [ref=e17]: Foundation state
+      - generic [ref=e18]:
+        - button "Success" [active] [pressed] [ref=e19] [cursor=pointer]
+        - button "Loading" [ref=e20] [cursor=pointer]
+        - button "Empty" [ref=e21] [cursor=pointer]
+        - button "Error" [ref=e22] [cursor=pointer]
+        - button "Unauthorized" [ref=e23] [cursor=pointer]
+        - button "Not configured" [ref=e24] [cursor=pointer]
+    - region "Synthetic foundation status" [ref=e49]:
+      - article [ref=e50]:
+        - paragraph [ref=e51]: SYSTEM
+        - paragraph [ref=e52]: READY
+        - paragraph [ref=e53]: Shared tokens and typed responses are active.
+      - article [ref=e54]:
+        - paragraph [ref=e55]: DATA BOUNDARY
+        - paragraph [ref=e56]: SERVER ONLY
+        - paragraph [ref=e57]: No production or personal data is used.
+      - article [ref=e58]:
+        - paragraph [ref=e59]: EMBED
+        - paragraph [ref=e60]: CONTENT DRIVEN
+        - paragraph [ref=e61]: No fixed viewport-height dependency.
+    - generic [ref=e38]: Generic UI proof only · No Notion writes · No production widget behavior
+  - alert [ref=e40]
