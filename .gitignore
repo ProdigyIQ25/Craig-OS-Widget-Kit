@@ -2,6 +2,8 @@ node_modules
 .next
 .vercel
 .playwright-cli
+test-results
+playwright-report
 .env*
 !.env.example
 *.log

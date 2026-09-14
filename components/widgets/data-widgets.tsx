@@ -6,7 +6,7 @@ import { StatusCard } from "./widget-shell";
 
 type Envelope<T> = { ok: true; data: T; generatedAt: string } | { ok: false; data: null; error: { code: string; message: string }; generatedAt: string };
 
-function useWidgetData<T>(path: string) {
+export function useWidgetData<T>(path: string) {
   const [result,setResult]=useState<{state:"loading"|"success"|"empty"|"error"|"disabled"; data?:T; generatedAt?:string; detail?:string}>({state:"loading"});
   useEffect(()=>{const controller=new AbortController();fetch(path,{signal:controller.signal,cache:"no-store"}).then(r=>r.json() as Promise<Envelope<T>>).then(body=>{
     if(!body.ok){setResult({state:body.error.code==="NOT_CONFIGURED"?"disabled":"error",detail:body.error.message,generatedAt:body.generatedAt});return}
@@ -15,7 +15,7 @@ function useWidgetData<T>(path: string) {
   return result;
 }
 
-function Freshness({at}:{at?:string}){return <p className="freshness">Generated {at?new Date(at).toLocaleTimeString("en-US",{timeZone:"America/Chicago",hour:"numeric",minute:"2-digit"}):"now"} CT</p>}
+export function Freshness({at}:{at?:string}){return <p className="freshness">Generated {at?new Date(at).toLocaleTimeString("en-US",{timeZone:"America/Chicago",hour:"numeric",minute:"2-digit"}):"now"} CT</p>}
 
 export function ExecutivePulseWidget(){const result=useWidgetData<{indicators:Array<{label:string;value:string;tone:string}>}>("/api/widgets/executive-pulse");return <ClientWidgetPage code="CW-11 · EXECUTIVE PULSE" title="Executive Pulse" footer="Read-only · B03/B05/B07/B08/B09/B10 · Archive=false">{()=>{
   if(result.state!=="success")return <StatusCard state={result.state} detail={result.detail}/>;const items=result.data?.indicators??[];if(!items.length)return <StatusCard state="empty"/>;return <><section className="pulse-grid">{items.slice(0,6).map(item=><article key={item.label}><p className="eyebrow">{item.label}</p><strong className={item.tone}>{item.value}</strong></article>)}</section><Freshness at={result.generatedAt}/></>}}</ClientWidgetPage>}

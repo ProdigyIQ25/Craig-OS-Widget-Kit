@@ -23,3 +23,14 @@ export function value(row: NotionRow, name: string): string | number | boolean |
 export function textValue(row: NotionRow, name: string, fallback = "NOT YET POPULATED"): string {
   const found = value(row, name); return found === null || found === "" ? fallback : String(found);
 }
+
+export function numberValue(row: NotionRow, name: string): number | null {
+  const found=value(row,name); if(typeof found==="number" && Number.isFinite(found)) return found;
+  if(typeof found==="string" && found.trim()!=="" && Number.isFinite(Number(found))) return Number(found);
+  return null;
+}
+
+export function relationCount(row: NotionRow, name: string): number {
+  const property=row.properties[name] as {type?:string;relation?:unknown[]} | undefined;
+  return property?.type==="relation" && Array.isArray(property.relation) ? property.relation.length : 0;
+}

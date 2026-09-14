@@ -26,7 +26,7 @@ export function FoundationDemo() {
           <h1>Craig OS Widget Kit</h1>
           <p className="muted">A secure, embed-safe interaction shell. <strong>DEMO DATA</strong></p>
         </div>
-        <span className="version" aria-label="Version 0.2.0">v0.2.0</span>
+        <span className="version" aria-label="Version 0.3.0">v0.3.0</span>
       </header>
 
       <section className="control-group" aria-labelledby="theme-label">

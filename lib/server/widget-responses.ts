@@ -2,6 +2,7 @@ import "server-only";
 import { failure, success } from "@/lib/api-contract";
 import { NotionConfigurationError, queryActive } from "@/lib/server/notion-read";
 import { deriveExceptions, derivePulse, deriveWorktelli } from "@/lib/widget-data/derive";
+import { deriveDailyBrief, deriveDecisionQueue, deriveHealthMatrix, deriveOpportunityRadar, deriveWorkforceStatus } from "@/lib/widget-data/wave2";
 
 export async function executivePulseResponse() {
   try { const [B03,B05,B07,B08,B09,B10]=await Promise.all([queryActive("B03"),queryActive("B05"),queryActive("B07"),queryActive("B08"),queryActive("B09"),queryActive("B10")]); return success({ indicators: derivePulse({B03,B05,B07,B08,B09,B10}) },"notion"); }
@@ -15,4 +16,9 @@ export async function exceptionsResponse() {
   try { return success({ exceptions: deriveExceptions(await queryActive("B07")) },"notion"); }
   catch(error){return safeFailure(error)}
 }
+export async function healthMatrixResponse(){try{const [B09,B10,B08]=await Promise.all([queryActive("B09"),queryActive("B10"),queryActive("B08")]);return success({rows:deriveHealthMatrix({B09,B10,B08})},"notion")}catch(error){return safeFailure(error)}}
+export async function workforceStatusResponse(){try{return success(deriveWorkforceStatus(await queryActive("B08")),"notion")}catch(error){return safeFailure(error)}}
+export async function opportunityRadarResponse(){try{return success({items:deriveOpportunityRadar(await queryActive("B03"))},"notion")}catch(error){return safeFailure(error)}}
+export async function decisionQueueResponse(){try{return success({items:deriveDecisionQueue(await queryActive("B05"))},"notion")}catch(error){return safeFailure(error)}}
+export async function dailyBriefResponse(){try{const [B03,B05,B07,B08,B10]=await Promise.all([queryActive("B03"),queryActive("B05"),queryActive("B07"),queryActive("B08"),queryActive("B10")]);return success(deriveDailyBrief({B03,B05,B07,B08,B10}),"notion")}catch(error){return safeFailure(error)}}
 function safeFailure(error: unknown){return error instanceof NotionConfigurationError ? failure("NOT_CONFIGURED",error.message,"notion") : failure("UPSTREAM_UNAVAILABLE","Canonical Business data is temporarily unavailable.","notion")}
