@@ -1,73 +1,48 @@
 # Craig OS Widget Kit
 
-Secure, independently deployable foundation for future Craig OS widgets embedded in Notion.
+Secure, independently deployable widgets for Craig OS Notion surfaces.
 
-Version: `0.1.0`
+Version: `0.2.0`
 
-## BU-14 boundary
+## BU-15 Wave 1
 
-This repository contains a generic `FOUNDATION DEMO`, shared design tokens, state patterns, themes, a typed API response contract, and an embed-safe server boundary. It contains no production widgets, persistence, authentication platform, Notion writes, Personal OS access, or operational Business data access.
+| Code | Widget | Route | Data |
+| --- | --- | --- | --- |
+| CW-01 | Live Clock | `/widgets/clock` | Local Central time |
+| CW-02 | Focus Timer | `/widgets/focus` | Ephemeral local state |
+| CW-04 | Session Controller | `/widgets/session` | Ephemeral local state |
+| CW-07 | Operating Mode Selector | `/widgets/mode` | Approved Notion deep links |
+| CW-08 | Media Controller | `/widgets/media` | Local UI; no account access |
+| CW-10 | Quick Capture Dock | `/widgets/quick-capture` | Canonical database deep links |
+| CW-11 | Executive Pulse | `/widgets/executive-pulse` | Read-only B03/B05/B07/B08/B09/B10 |
+| CW-14 | Worktelli State | `/widgets/worktelli-state` | Read-only B10/B11/B07/B05/B09 |
+| CW-17 | Exception Alert | `/widgets/exception` | Read-only B07 |
+| CW-20 | Ambient Header | `/widgets/header` | Local Central time and approved copy |
 
-## Stack
+The three data-backed widgets query only their named canonical sources on the server. Every query applies `Archive = false`; raw Notion responses and credentials never reach the browser. No route has Notion write capability.
 
-- Next.js App Router
-- React and TypeScript in strict mode
-- Server-side route handlers
-- CSS custom properties and typed theme identifiers
-- Vercel hosting
-
-## Routes
-
-| Route | Purpose |
-| --- | --- |
-| `/` | Platform landing and status page |
-| `/widgets/demo` | Generic interactive foundation proof using clearly marked demo data |
-| `/api/health` | Uncached server health response using the shared typed envelope |
-
-Reserved future pattern: `/widgets/<widget-name>`. No production widget routes are implemented in BU-14.
-
-## Local setup
+## Local setup and validation
 
 ```bash
 npm install
 cp .env.example .env.local
-npm run dev
-```
-
-No environment variable is required for the foundation demo or health endpoint. Leave `NOTION_TOKEN` and `NOTION_WORKSPACE_ID` unset until a separately authorized read-only integration requires them.
-
-## Validation
-
-```bash
+npm run test
 npm run lint
 npm run build
 npm run start
+npx playwright test
 ```
 
-Then inspect `/widgets/demo` at 320, 390, 768, and 1024 pixels and verify `/api/health` returns HTTP 200.
+`NOTION_TOKEN` is required only for the three read-only Business widgets. It must remain server-only. Without it, those widgets render an explicit disabled state and never invent live values. Personal OS data access is not implemented.
 
-## Deployment
+## Security boundary
 
-1. Authenticate the Vercel CLI without placing a token in this repository.
-2. Link this directory to the standalone `craig-os-widget-kit` Vercel project.
-3. Deploy a preview and validate it.
-4. Promote the validated artifact or run `vercel --prod`.
-5. Embed the production HTTPS `/widgets/demo` URL only in an approved Notion admin/test page.
+Browser → widget → server route → exact canonical Notion data source. The CSP permits framing by Notion origins, blocks objects and unneeded browser capabilities, and allows network connections only to this deployment from the browser. Optional URL parameters are sanitized and contain no credentials.
 
-## Architecture and security
-
-Future Notion access follows: Browser → Craig OS Widget → server route → Notion API. `lib/server/notion-boundary.ts` is server-only and exposes credential-presence booleans, never credential values. API consumers receive structured success/failure envelopes from `lib/api-contract.ts`; raw upstream responses do not go directly to widgets.
-
-The app sends a Content Security Policy that permits framing only by Notion origins. It sends no `X-Frame-Options` denial, uses no URL credentials, and disables browser capabilities that are unnecessary for widgets.
-
-The demo has no Notion API dependency. If a future read-only Notion call fails, the shared explicit error/not-configured states must be rendered; live values must never be fabricated.
-
-## Design foundation
-
-Tokens cover typography, spacing, radius, border, panel, card, text, muted text, accent, healthy, attention, high risk, critical, and inactive states. Themes are `business`, `personal`, and `compact`. Interactive targets are at least approximately 44px, focus is visible, motion is minimal, and reduced-motion preferences are honored.
+No persistence, authentication platform, AI, automations, media-account integration, Notion writes, synthetic history, or additional Wave widgets are included.
 
 ## Known limitations
 
-- Notion controls final embed height and surrounding chrome.
-- No Notion connectivity check is included because BU-14 does not require production data access and no credential is needed for platform proof.
-- Theme and demo-state selection are intentionally ephemeral; no persistence layer is authorized.
+- Notion controls the final embed height and surrounding chrome.
+- Media controls remain provider-launch UI until approved URLs are supplied; autoplay and simulated playback are intentionally absent.
+- Live Business widgets require a read-only Notion integration shared only with B03, B05, B07, B08, B09, B10, and B11.

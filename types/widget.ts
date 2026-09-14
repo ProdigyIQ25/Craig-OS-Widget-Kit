@@ -1,4 +1,4 @@
-export type WidgetTheme = "personal" | "business" | "compact";
+export type WidgetTheme = "personal" | "business" | "spiritual-minimal" | "compact";
 
 export type WidgetState =
   | "success"
@@ -7,3 +7,5 @@ export type WidgetState =
   | "error"
   | "unauthorized"
   | "not-configured";
+
+export type OperationalState = "default" | "loading" | "empty" | "error" | "disabled";
