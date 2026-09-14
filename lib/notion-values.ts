@@ -11,6 +11,7 @@ export function value(row: NotionRow, name: string): string | number | boolean |
   }
   if (type === "select" || type === "status") return (property[type] as { name?: string } | null)?.name ?? null;
   if (type === "number" || type === "checkbox") return property[type] as number | boolean | null;
+  if (type === "url") return property.url as string | null;
   if (type === "date") return (property.date as { start?: string } | null)?.start ?? null;
   if (type === "people") return ((property.people as Array<{ name?: string }> | undefined) ?? []).map(person => person.name).filter(Boolean).join(", ") || null;
   if (type === "formula") {

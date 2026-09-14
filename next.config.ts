@@ -10,6 +10,8 @@ const contentSecurityPolicy = [
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "connect-src 'self'",
+  "frame-src https://www.youtube-nocookie.com https://open.spotify.com https://player.vimeo.com https://www.loom.com",
+  "media-src 'self' https:",
 ].join("; ");
 
 const nextConfig: NextConfig = {

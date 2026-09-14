@@ -2,7 +2,7 @@
 
 Secure, independently deployable widgets for Craig OS Notion surfaces.
 
-Version: `0.3.0`
+Version: `0.4.0`
 
 ## BU-15 Wave 1
 
@@ -12,7 +12,7 @@ Version: `0.3.0`
 | CW-02 | Focus Timer | `/widgets/focus` | Ephemeral local state |
 | CW-04 | Session Controller | `/widgets/session` | Ephemeral local state |
 | CW-07 | Operating Mode Selector | `/widgets/mode` | Approved Notion deep links |
-| CW-08 | Media Controller | `/widgets/media` | Local UI; no account access |
+| CW-08 | Media Controller | `/widgets/media` | Read-only P11 public media URLs |
 | CW-10 | Quick Capture Dock | `/widgets/quick-capture` | Canonical database deep links |
 | CW-11 | Executive Pulse | `/widgets/executive-pulse` | Read-only B03/B05/B07/B08/B09/B10 |
 | CW-14 | Worktelli State | `/widgets/worktelli-state` | Read-only B10/B11/B07/B05/B09 |
@@ -36,7 +36,11 @@ The data-backed widgets query only their named canonical sources on the server. 
 | CW-18 | Daily Brief | `/widgets/daily-brief` | Executive B03/B05/B07/B08/B10; Personal fixture shell |
 | CW-19 | Weekly Review Pulse | `/widgets/weekly-review` | Clearly labeled fixture |
 
-All Business-backed routes server-filter `Archive = false`. Personal canonical reads and every Notion write remain absent. Opportunity Radar exposes only relation presence because B01 was not added to the existing connection.
+All data-backed routes server-filter `Archive = false`. P11 is the only Personal canonical read, and every Notion write remains absent. Opportunity Radar exposes only relation presence because B01 was not added to the existing connection.
+
+## BU-17 Media System
+
+CW-08 now reads only active records from P11 Media Library. It supports public YouTube, Spotify, Vimeo, and Loom embeds; direct public audio; public SoundCloud/provider links; and a safe generic HTTPS fallback. URL parameters accept only the locked mode, media-type, and favorite filters. One record is active at a time, autoplay is absent, and only directly controllable audio reports READY, PLAYING, and PAUSED states. Embedded and linked services remain explicitly labeled `EXTERNAL PROVIDER`.
 
 ## Local setup and validation
 
@@ -50,7 +54,7 @@ npm run start
 npx playwright test
 ```
 
-`NOTION_TOKEN` is required only for the read-only Business widgets. It must remain server-only. Without it, those widgets render an explicit disabled state and never invent live values. Personal OS data access is not implemented.
+`NOTION_TOKEN` is required only for the read-only Business widgets and P11 Media Library. It must remain server-only. Without it, those widgets render an explicit disabled state and never invent live values. No other Personal OS data source is read.
 
 ## Security boundary
 
@@ -61,5 +65,5 @@ No persistence, authentication platform, AI, automations, media-account integrat
 ## Known limitations
 
 - Notion controls the final embed height and surrounding chrome.
-- Media controls remain provider-launch UI until approved URLs are supplied; autoplay and simulated playback are intentionally absent.
-- Live Business widgets require a read-only Notion integration shared only with B03, B05, B07, B08, B09, B10, and B11.
+- Empty P11 filters render a context-specific empty state until approved public URLs are supplied; autoplay and simulated playback are intentionally absent.
+- Live data widgets require the read-only Notion integration shared only with B03, B05, B07, B08, B09, B10, B11, and P11.

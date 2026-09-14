@@ -82,13 +82,6 @@ export function ModeWidget() {
   </>}</ClientWidgetPage>;
 }
 
-const mediaTypes=["Music","Playlist","Video","Podcast","Audio"];
-export function MediaWidget(){const [active,setActive]=useState("Music");return <ClientWidgetPage code="CW-08 · MEDIA CONTROLLER" title="Media Context" footer="No autoplay · no media account access">{(config)=><>
-  <div className="segmented">{mediaTypes.map(x=><button key={x} aria-pressed={active===x} onClick={()=>setActive(x)}>{x}</button>)}</div>
-  <section className="media-card"><div className="media-art" aria-hidden="true">{active.slice(0,1)}</div><div><p className="eyebrow">{active.toUpperCase()}</p><h2>{config.context || "No source selected"}</h2><p className="muted">Add an approved provider URL to open media. Playback state is never simulated.</p></div></section>
-  <button className="primary-button" disabled>Open provider</button>
-  </>}</ClientWidgetPage>}
-
 const captures={personal:[["Prayer","a2e100b81b534d9daf930c442c00281c"],["Commitment","fc64e6a23d2a4065a28a6da487f23a67"],["Brand Idea","fc7b4765360e47b48d6063f3837038ee"],["Decision","4c11a712c39a4176ba7a41a8a96c236c"],["Signal","b37baae9772d4581b39149217c142050"],["Knowledge","e7075ed9959141d89382b515a0c09397"]],business:[["Opportunity","4955ac345ac748e3b54128019a0a716a"],["Signal","3ce532354e3b4dd2891608083f988005"],["Decision","bbbee0957be8415ca52332df564bd85d"],["Exception","87983ed749614694ba6bd0f0dfc6b586"],["Initiative","2d3d81c2e6544444a8ae92ee4a6590bd"]]} as const;
 export function QuickCaptureWidget(){const [scope,setScope]=useState<keyof typeof captures>("personal");return <ClientWidgetPage code="CW-10 · QUICK CAPTURE" title="Capture Dock" footer="Deep links only · Notion write API calls: 0">{()=><>
   <div className="segmented"><button aria-pressed={scope==="personal"} onClick={()=>setScope("personal")}>Personal</button><button aria-pressed={scope==="business"} onClick={()=>setScope("business")}>Business</button></div>

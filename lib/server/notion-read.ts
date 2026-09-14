@@ -10,6 +10,7 @@ export const SOURCES = {
   B09: "521e6076-5d6c-4f50-8b69-92908f37782b",
   B10: "c1e6281e-dc06-4ddf-b2d9-00402126975b",
   B11: "6114a1d8-4a6d-48d2-9cf0-4389fadef721",
+  P11: "d5c97817-3aab-4da9-b6ae-4f075d3b21e2",
 } as const;
 
 export class NotionConfigurationError extends Error {}

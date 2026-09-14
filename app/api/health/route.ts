@@ -9,7 +9,7 @@ export function GET() {
       status: "ok",
       app: "craig-os-widget-kit",
       environment: process.env.APP_ENV ?? process.env.VERCEL_ENV ?? "development",
-      version: "0.3.0",
+      version: "0.4.0",
       timestamp: new Date().toISOString()
     }),
     { status: 200, headers: { "Cache-Control": "no-store" } }
