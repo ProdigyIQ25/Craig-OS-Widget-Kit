@@ -11,7 +11,7 @@ export default function Home() {
         <Link className="secondary-link" href="/api/health">View health response</Link>
       </div>
       <dl className="platform-facts">
-        <div><dt>Version</dt><dd>0.4.0</dd></div>
+        <div><dt>Version</dt><dd>0.4.1</dd></div>
         <div><dt>Data</dt><dd>Scoped Business + P11 reads</dd></div>
         <div><dt>Writes</dt><dd>Disabled by design</dd></div>
       </dl>
