@@ -4,7 +4,7 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors https://www.notion.so https://*.notion.so https://*.notion.site",
+  "frame-ancestors https://app.notion.com https://*.notion.com https://www.notion.so https://*.notion.so https://*.notion.site",
   "object-src 'none'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
