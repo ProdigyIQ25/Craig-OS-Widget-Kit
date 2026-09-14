@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 const routes=["clock","focus","session","mode","media","quick-capture","executive-pulse","worktelli-state","exception","header","countdown","alignment","progress","attention","health-matrix","workforce-status","opportunity-radar","decision-queue","daily-brief","weekly-review"];
-const widths=[320,390,768,1024];
+const widths=[320,390,430,768,1024];
 
 for(const route of routes) for(const width of widths) test(`${route} is embed-safe at ${width}px`,async({page})=>{
   const errors:string[]=[];page.on("console",message=>{if(message.type()==="error"||message.type()==="warning")errors.push(message.text())});
@@ -22,3 +22,27 @@ test("data widgets expose a truthful configured or disabled state",async({page},
 test("wave 2 local widgets disclose fixture or local truth",async({page})=>{for(const route of ["alignment","attention","weekly-review"]){await page.goto(`/widgets/${route}`);await expect(page.getByText(/FIXTURE DATA/).first()).toBeVisible()}for(const route of ["countdown","progress"]){await page.goto(`/widgets/${route}`);await expect(page.locator("footer")).toContainText(/Local/)}await page.goto("/widgets/daily-brief?mode=personal-shell");await expect(page.getByText("FIXTURE LAYOUT · PERSONAL READS 0")).toBeVisible()});
 test("wave 2 forced states stay explicit",async({page})=>{for(const state of ["loading","empty","error","disabled"]){await page.goto(`/widgets/progress?context=${state}`);await expect(page.getByText(state.toUpperCase(),{exact:true})).toBeVisible()}});
 test("all controls have accessible names and keyboard focus",async({page})=>{for(const route of routes){await page.goto(`/widgets/${route}`);const controls=page.locator("button,a,input");for(const control of await controls.all()){expect((await control.getAttribute("aria-label"))||(await control.textContent())||(await control.getAttribute("id"))).toBeTruthy()}if(await controls.count()){await page.keyboard.press("Tab");expect(await page.locator(":focus-visible").count()).toBeGreaterThan(0)}}});
+
+for(const width of [320,390,430]) test(`mobile-critical controls stay tappable at ${width}px`,async({page})=>{
+  await page.setViewportSize({width,height:900});
+  for(const route of ["focus","session","media"]){
+    await page.goto(`/widgets/${route}`);
+    const controls=page.locator("button,input,select");
+    for(const control of await controls.all()){
+      const box=await control.boundingBox();
+      expect(box,`${route} control should be visible`).not.toBeNull();
+      expect(box!.height,`${route} control should be at least 44px tall`).toBeGreaterThanOrEqual(44);
+      expect(box!.x,`${route} control should not clip left`).toBeGreaterThanOrEqual(0);
+      expect(box!.x+box!.width,`${route} control should not clip right`).toBeLessThanOrEqual(width);
+    }
+  }
+});
+
+for(const width of [320,390,430]) test(`timer digits stay inside the viewport at ${width}px`,async({page})=>{
+  await page.setViewportSize({width,height:720});
+  await page.goto("/widgets/focus");
+  const box=await page.locator(".timer-readout").boundingBox();
+  expect(box).not.toBeNull();
+  expect(box!.x).toBeGreaterThanOrEqual(0);
+  expect(box!.x+box!.width).toBeLessThanOrEqual(width);
+});
