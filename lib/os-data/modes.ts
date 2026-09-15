@@ -1,0 +1,71 @@
+export type PersonalMode = "command" | "focus" | "spiritual" | "brand" | "growth" | "reset";
+export type BusinessMode = "executive" | "revenue" | "worktelli" | "engineering" | "clients" | "workforce";
+export type OperatingMode = PersonalMode | BusinessMode;
+export type ModeAction = { label: string; href: string; primary?: boolean };
+export type ModeDefinition<T extends OperatingMode> = {
+  mode: T;
+  label: string;
+  theme: string;
+  heading: string;
+  subheading: string;
+  primaryAction: ModeAction;
+  secondaryActions: ModeAction[];
+  mediaContext: { label: string; mode: string; href: string };
+  navigation: { label: string; href: string };
+  moduleOrder: readonly string[];
+  emptyState: string;
+};
+
+export const notion = {
+  personalCommand: "https://www.notion.so/3da42c9f9e5f8107a4b7d4056fa6d8ff",
+  businessCommand: "https://www.notion.so/3da42c9f9e5f81ca95c2c17aa2470cca",
+  today: "https://www.notion.so/3da42c9f9e5f8161a132d3fc348d050c",
+  focus: "https://www.notion.so/3da42c9f9e5f8174a46be4bbf198497d",
+  spiritual: "https://www.notion.so/3da42c9f9e5f81b681e2ea1b47674c1b",
+  brand: "https://www.notion.so/3da42c9f9e5f81e7aad9ef24244b6c82",
+  growth: "https://www.notion.so/3da42c9f9e5f81f2b73df164fa9f0722",
+  reset: "https://www.notion.so/3da42c9f9e5f819ca5a6ec72b0cd2c1c",
+  revenue: "https://www.notion.so/3da42c9f9e5f81569dfeeb41ea185a5c",
+  worktelli: "https://www.notion.so/3da42c9f9e5f81ff9582cbc1edc7d00e",
+  engineering: "https://www.notion.so/3da42c9f9e5f811ab596d16e08496ec8",
+  clients: "https://www.notion.so/3da42c9f9e5f819fbadec40c7e9fd976",
+  workforce: "https://www.notion.so/3da42c9f9e5f8155b6abebca2bc35536",
+  prayer: "https://www.notion.so/a2e100b81b534d9daf930c442c00281c",
+  journal: "https://www.notion.so/a9b86e2046a4499b96618bf91d0e0d35",
+  personalDecision: "https://www.notion.so/4c11a712c39a4176ba7a41a8a96c236c",
+  brandIdea: "https://www.notion.so/fc7b4765360e47b48d6063f3837038ee",
+  knowledge: "https://www.notion.so/e7075ed9959141d89382b515a0c09397",
+  commitment: "https://www.notion.so/fc64e6a23d2a4065a28a6da487f23a67",
+  personalSignal: "https://www.notion.so/b37baae9772d4581b39149217c142050",
+  opportunity: "https://www.notion.so/4955ac345ac748e3b54128019a0a716a",
+  businessSignal: "https://www.notion.so/3ce532354e3b4dd2891608083f988005",
+  businessDecision: "https://www.notion.so/bbbee0957be8415ca52332df564bd85d",
+  exception: "https://www.notion.so/87983ed749614694ba6bd0f0dfc6b586",
+  initiative: "https://www.notion.so/2d3d81c2e6544444a8ae92ee4a6590bd",
+} as const;
+
+const media = (mode: string, label: string) => ({ label, mode, href: `/widgets/media?mode=${mode}&theme=personal` });
+
+export const personalModeRegistry: Record<PersonalMode, ModeDefinition<PersonalMode>> = {
+  command: { mode:"command", label:"COMMAND", theme:"command", heading:"David Command", subheading:"Operate with alignment. Protect what matters.", primaryAction:{label:"Protect today",href:notion.today,primary:true}, secondaryActions:[{label:"Add commitment",href:notion.commitment},{label:"Capture signal",href:notion.personalSignal}], mediaContext:media("deep-work","Current media"), navigation:{label:"Personal Command",href:notion.personalCommand}, moduleOrder:["attention","focus","capture","decisions","signals","rhythms","media"], emptyState:"Nothing currently requires attention." },
+  focus: { mode:"focus", label:"FOCUS", theme:"focus", heading:"Focus", subheading:"One objective. Everything else gets quieter.", primaryAction:{label:"Start focus",href:"/widgets/focus?theme=personal&compact=true&mode=focus",primary:true}, secondaryActions:[{label:"+ Note",href:notion.knowledge},{label:"+ Insight",href:notion.knowledge},{label:"Exit focus",href:"?mode=command"}], mediaContext:media("focus","Focus audio"), navigation:{label:"Focus workspace",href:notion.focus}, moduleOrder:["objective","timer","media","capture","exit"], emptyState:"Choose one current outcome, then protect the session." },
+  spiritual: { mode:"spiritual", label:"SPIRITUAL", theme:"spiritual", heading:"Spiritual Center", subheading:"Be still. Listen well.", primaryAction:{label:"Begin prayer session",href:"/widgets/session?theme=spiritual-minimal&compact=true&mode=prayer",primary:true}, secondaryActions:[{label:"+ Prayer",href:notion.prayer},{label:"+ Reflection",href:notion.journal},{label:"Scripture note",href:notion.spiritual}], mediaContext:media("spiritual","Worship / teaching"), navigation:{label:"Spiritual Center",href:notion.spiritual}, moduleOrder:["scripture","prayer","session","worship","teaching","reflection"], emptyState:"Private prayer and journal content remains in Notion. Open the protected surface when you are ready." },
+  brand: { mode:"brand", label:"BRAND", theme:"brand", heading:"Brand Studio", subheading:"Create with conviction. Publish with authority.", primaryAction:{label:"Capture brand idea",href:notion.brandIdea,primary:true}, secondaryActions:[{label:"+ Hook",href:notion.brandIdea},{label:"+ Insight",href:notion.knowledge},{label:"Creation timer",href:"/widgets/focus?theme=personal&compact=true&mode=writing"}], mediaContext:media("writing","Reference media"), navigation:{label:"Brand Studio",href:notion.brand}, moduleOrder:["asset","pipeline","timer","reference","capture","ready"], emptyState:"Brand records stay protected until P07 read access is separately authorized." },
+  growth: { mode:"growth", label:"GROWTH", theme:"growth", heading:"Growth Lab", subheading:"Turn insight into practice.", primaryAction:{label:"Capture knowledge",href:notion.knowledge,primary:true}, secondaryActions:[{label:"+ Insight",href:notion.knowledge},{label:"Enter focus",href:"?mode=focus"}], mediaContext:media("learning","Learning media"), navigation:{label:"Growth Lab",href:notion.growth}, moduleOrder:["study","media","capture","frameworks","focus"], emptyState:"Knowledge detail stays protected until P08 read access is separately authorized." },
+  reset: { mode:"reset", label:"RESET", theme:"reset", heading:"Weekly Reset", subheading:"Close loops. Begin clean.", primaryAction:{label:"Open weekly review",href:notion.reset,primary:true}, secondaryActions:[{label:"Review decisions",href:notion.personalDecision},{label:"Review signals",href:notion.personalSignal}], mediaContext:media("reflection","Reflection media"), navigation:{label:"Reset workspace",href:notion.reset}, moduleOrder:["outcomes","commitments","rhythms","decisions","signals","reflection","next-week"], emptyState:"The week is clear. Prepare the next one deliberately." },
+};
+
+export const businessModeRegistry: Record<BusinessMode, ModeDefinition<BusinessMode>> = {
+  executive: { mode:"executive", label:"EXECUTIVE", theme:"executive", heading:"Executive Command", subheading:"Make the next clear decision.", primaryAction:{label:"Review attention",href:notion.businessCommand,primary:true}, secondaryActions:[{label:"+ Decision",href:notion.businessDecision},{label:"+ Exception",href:notion.exception}], mediaContext:media("general","Executive context"), navigation:{label:"Executive Command",href:notion.businessCommand}, moduleOrder:["requires-david","pulse","worktelli","revenue","workforce","decisions","exceptions","signals"], emptyState:"No executive decisions or exceptions require attention." },
+  revenue: { mode:"revenue", label:"REVENUE", theme:"revenue", heading:"Revenue Command", subheading:"Move the right opportunity toward a clear next step.", primaryAction:{label:"Open opportunity radar",href:notion.opportunity,primary:true}, secondaryActions:[{label:"+ Opportunity",href:notion.opportunity},{label:"+ Decision",href:notion.businessDecision},{label:"+ Signal",href:notion.businessSignal}], mediaContext:media("general","Commercial context"), navigation:{label:"Revenue Command",href:notion.revenue}, moduleOrder:["radar","closing","follow-up","pipeline","signals","decisions","accounts"], emptyState:"No live opportunity is populated. Open Revenue Command to work the canonical pipeline." },
+  worktelli: { mode:"worktelli", label:"WORKTELLI", theme:"worktelli", heading:"Worktelli Control", subheading:"Govern the product. Prove the state.", primaryAction:{label:"Open product control",href:notion.worktelli,primary:true}, secondaryActions:[{label:"+ Signal",href:notion.businessSignal},{label:"+ Decision",href:notion.businessDecision},{label:"+ Exception",href:notion.exception}], mediaContext:media("general","Product context"), navigation:{label:"Worktelli Control",href:notion.worktelli}, moduleOrder:["state","constraint","qualification","packet","capabilities","decisions","exceptions","signals"], emptyState:"Worktelli state is not yet populated in the authorized canonical sources." },
+  engineering: { mode:"engineering", label:"ENGINEERING", theme:"engineering", heading:"Engineering Control", subheading:"Keep the packet, constraint, and release truth aligned.", primaryAction:{label:"Open Engineering Control",href:notion.engineering,primary:true}, secondaryActions:[{label:"+ Decision",href:notion.businessDecision},{label:"+ Exception",href:notion.exception}], mediaContext:media("general","Technical context"), navigation:{label:"Engineering Control",href:notion.engineering}, moduleOrder:["packet","exceptions","qualification","constraints","decisions","navigation"], emptyState:"No engineering packet is currently populated. Open Engineering Control for the governed source." },
+  clients: { mode:"clients", label:"CLIENTS", theme:"clients", heading:"Client Command", subheading:"Protect relationships. Surface service risk early.", primaryAction:{label:"Open Client Command",href:notion.clients,primary:true}, secondaryActions:[{label:"+ Opportunity",href:notion.opportunity},{label:"+ Signal",href:notion.businessSignal},{label:"+ Exception",href:notion.exception}], mediaContext:media("general","Client context"), navigation:{label:"Client Command",href:notion.clients}, moduleOrder:["clients","risk","opportunities","signals","navigation"], emptyState:"Client detail is bounded because B01/B02 are not authorized shell reads. Open Client Command for canonical records." },
+  workforce: { mode:"workforce", label:"WORKFORCE", theme:"workforce", heading:"Workforce Control", subheading:"Direct capacity toward outcomes.", primaryAction:{label:"Open Workforce Control",href:notion.workforce,primary:true}, secondaryActions:[{label:"+ Exception",href:notion.exception},{label:"+ Decision",href:notion.businessDecision}], mediaContext:media("general","Operations context"), navigation:{label:"Workforce Control",href:notion.workforce}, moduleOrder:["status","attention","exceptions","metrics","executive-workers","functions"], emptyState:"No active digital workers are currently populated." },
+};
+
+export const personalModes = Object.keys(personalModeRegistry) as PersonalMode[];
+export const businessModes = Object.keys(businessModeRegistry) as BusinessMode[];
+
+export function parsePersonalMode(value: string | null): PersonalMode { return value && value in personalModeRegistry ? value as PersonalMode : "command"; }
+export function parseBusinessMode(value: string | null): BusinessMode { return value && value in businessModeRegistry ? value as BusinessMode : "executive"; }

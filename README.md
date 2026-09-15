@@ -2,7 +2,11 @@
 
 Secure, independently deployable widgets for Craig OS Notion surfaces.
 
-Version: `0.4.0`
+Version: `0.6.0`
+
+## XP-02 Operating Mode Engine
+
+The existing Personal and Business command routes now host one shared, URL-addressable operating-mode engine. Personal modes are `COMMAND`, `FOCUS`, `SPIRITUAL`, `BRAND`, `GROWTH`, and `RESET`; Business modes are `EXECUTIVE`, `REVENUE`, `WORKTELLI`, `ENGINEERING`, `CLIENTS`, and `WORKFORCE`. Mode changes alter the shell hierarchy, actions, module order, navigation, media context, tone, and empty state while preserving the canonical read-only data boundary. Existing command URLs remain stable and select modes with a `?mode=` query parameter.
 
 ## BU-15 Wave 1
 
