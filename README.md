@@ -2,7 +2,11 @@
 
 Secure, independently deployable widgets for Craig OS Notion surfaces.
 
-Version: `0.6.0`
+Version: `0.7.0`
+
+## XP-03 Craig Media Theater
+
+`/os/media?mode=focus` is the expanded, reusable P11-backed media experience. The same component is embedded in Personal `FOCUS`, `SPIRITUAL`, `GROWTH`, and `BRAND` modes with mode-specific context, queue, presentation, and certified deep-link capture actions. It supports allowlisted YouTube, Vimeo, Loom, and Spotify embeds; direct audio/video; public podcast audio; and an external-only fallback for unsupported HTTPS providers. Autoplay is off, only one player is mounted, mode/selection changes retire the prior player, and no Notion write path or new database access is present.
 
 ## XP-02 Operating Mode Engine
 

@@ -8,7 +8,7 @@ export function WidgetShell({ code, title, theme, children, footer = "Craig OS Â
     <main className="widget-frame wave-widget" data-theme={theme}>
       <header className="widget-header">
         <div><p className="eyebrow">{code}</p><h1>{title}</h1></div>
-        <span className="version">v0.6.0</span>
+      <span className="version">v0.7.0</span>
       </header>
       {children}
       <footer><span className="status-dot" aria-hidden="true" />{footer}</footer>
