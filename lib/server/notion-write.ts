@@ -10,7 +10,7 @@ export async function createActionRecord(actionId:ActionId,input:Record<string,s
   const action=serverActionRegistry[actionId];
   // P07 and P08 retain canonical database IDs from the pre-data-source API.
   // All other destinations use current data source IDs.
-  const notionVersion="data_source_id" in action.parent?"2026-03-11":"2022-06-28";
+  const notionVersion="data_source_id" in action.parent?"2025-09-03":"2022-06-28";
   const response=await fetch("https://api.notion.com/v1/pages",{
     method:"POST",
     headers:{Authorization:`Bearer ${token}`,"Notion-Version":notionVersion,"Content-Type":"application/json"},
