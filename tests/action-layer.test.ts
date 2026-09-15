@@ -68,8 +68,8 @@ test("property builders apply only certified defaults and supplied optional valu
 
 test("all 11 actions return minimal confirmed success metadata",async()=>{
   const original=global.fetch;let calls=0;
-  global.fetch=async()=>{calls++;return Response.json({id:`record-${calls}`,url:`https://www.notion.so/record-${calls}`,created_time:"2026-09-15T12:00:00.000Z"})};
-  try{for(const [index,id] of ACTION_IDS.entries()){const result=await executeAction(signedRequest(id,optional[id],key(`1${index}`),`10.0.0.${index+1}`),id);assert.equal(result.status,200);assert.deepEqual(Object.keys(result.body),["ok","actionId","recordId","recordUrl","createdAt"]);assert.equal(result.body.actionId,id)}assert.equal(calls,11)}finally{global.fetch=original}
+  global.fetch=async()=>{calls++;return calls===1?Response.json({id:"12345678-1234-1234-1234-123456789abc"}):Response.json({id:`record-${calls}`,url:`https://www.notion.so/record-${calls}`,created_time:"2026-09-15T12:00:00.000Z"})};
+  try{for(const [index,id] of ACTION_IDS.entries()){const result=await executeAction(signedRequest(id,optional[id],key(`1${index}`),`10.0.0.${index+1}`),id);assert.equal(result.status,200);assert.deepEqual(Object.keys(result.body),["ok","actionId","recordId","recordUrl","createdAt"]);assert.equal(result.body.actionId,id);if(index===0&&result.body.ok)assert.equal(result.body.recordUrl,"https://www.notion.so/12345678123412341234123456789abc")}assert.equal(calls,11)}finally{global.fetch=original}
 });
 
 test("same-key retries and rapid repeats create once; changed content is rejected",async()=>{

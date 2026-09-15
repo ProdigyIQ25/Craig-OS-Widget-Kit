@@ -21,6 +21,7 @@ export async function createActionRecord(actionId:ActionId,input:Record<string,s
   });
   if(!response.ok)throw new NotionWriteError("Notion create failed.",response.status);
   const page=await response.json() as {id?:string;url?:string;created_time?:string};
-  if(!page.id||!page.url||!page.created_time)throw new NotionWriteError("Notion returned an incomplete creation response.",undefined,`id:${Boolean(page.id)},url:${Boolean(page.url)},created:${Boolean(page.created_time)}`);
-  return {ok:true as const,actionId,recordId:page.id,recordUrl:page.url,createdAt:page.created_time};
+  if(!page.id)throw new NotionWriteError("Notion returned an incomplete creation response.",undefined,"id:false");
+  const compactId=page.id.replaceAll("-","");
+  return {ok:true as const,actionId,recordId:page.id,recordUrl:page.url??`https://www.notion.so/${compactId}`,createdAt:page.created_time??new Date().toISOString()};
 }
