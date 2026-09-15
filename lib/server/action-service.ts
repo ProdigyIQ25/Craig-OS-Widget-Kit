@@ -9,7 +9,7 @@ export type ActionErrorCode="VALIDATION_ERROR"|"UNAUTHORIZED_ACTION"|"UPSTREAM_U
 export const failure=(actionId:string,errorCode:ActionErrorCode)=>({ok:false as const,actionId,errorCode});
 
 export async function executeAction(request:Request,actionId:ActionId){
-  const started=Date.now();let code="WRITE_FAILED",upstreamStatus:number|undefined;
+  const started=Date.now();let code="WRITE_FAILED",upstreamStatus:number|undefined,responseShape:string|undefined;
   try{
     if(!validateActionRequest(request)){code="UNAUTHORIZED_ACTION";return {status:403,body:failure(actionId,"UNAUTHORIZED_ACTION")}}
     if(!rateLimit(request,actionId)){code="RATE_LIMITED";return {status:429,body:failure(actionId,"RATE_LIMITED")}}
@@ -24,10 +24,10 @@ export async function executeAction(request:Request,actionId:ActionId){
   }catch(error){
     if(error instanceof ActionValidationError){code="VALIDATION_ERROR";return {status:400,body:failure(actionId,"VALIDATION_ERROR")}}
     if(error instanceof Error&&error.message==="DUPLICATE_REQUEST"){code="DUPLICATE_REQUEST";return {status:409,body:failure(actionId,"DUPLICATE_REQUEST")}}
-    if(error instanceof NotionWriteError){upstreamStatus=error.upstreamStatus;code=error.message.includes("configured")?"UPSTREAM_UNAVAILABLE":"WRITE_FAILED";return {status:503,body:failure(actionId,code as ActionErrorCode)}}
+    if(error instanceof NotionWriteError){upstreamStatus=error.upstreamStatus;responseShape=error.responseShape;code=error.message.includes("configured")?"UPSTREAM_UNAVAILABLE":"WRITE_FAILED";return {status:503,body:failure(actionId,code as ActionErrorCode)}}
     code="UPSTREAM_UNAVAILABLE";return {status:503,body:failure(actionId,"UPSTREAM_UNAVAILABLE")};
   }finally{
     const marker=idempotencyHash(actionId,request.headers.get("x-idempotency-key")??"body").slice(0,12);
-    console.info(JSON.stringify({event:"craig_os_action",actionId,code,durationMs:Date.now()-started,requestMarker:marker,...(upstreamStatus?{upstreamStatus}:{})}));
+    console.info(JSON.stringify({event:"craig_os_action",actionId,code,durationMs:Date.now()-started,requestMarker:marker,...(upstreamStatus?{upstreamStatus}:{}),...(responseShape?{responseShape}:{})}));
   }
 }

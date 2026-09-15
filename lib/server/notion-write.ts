@@ -3,7 +3,7 @@ import type { ActionId } from "@/lib/actions/registry";
 import { serverActionRegistry } from "@/lib/server/action-registry";
 
 export class NotionWriteError extends Error {
-  constructor(message:string,public readonly upstreamStatus?:number){super(message)}
+  constructor(message:string,public readonly upstreamStatus?:number,public readonly responseShape?:string){super(message)}
 }
 
 export async function createActionRecord(actionId:ActionId,input:Record<string,string>){
@@ -21,6 +21,6 @@ export async function createActionRecord(actionId:ActionId,input:Record<string,s
   });
   if(!response.ok)throw new NotionWriteError("Notion create failed.",response.status);
   const page=await response.json() as {id?:string;url?:string;created_time?:string};
-  if(!page.id||!page.url||!page.created_time)throw new NotionWriteError("Notion returned an incomplete creation response.");
+  if(!page.id||!page.url||!page.created_time)throw new NotionWriteError("Notion returned an incomplete creation response.",undefined,`id:${Boolean(page.id)},url:${Boolean(page.url)},created:${Boolean(page.created_time)}`);
   return {ok:true as const,actionId,recordId:page.id,recordUrl:page.url,createdAt:page.created_time};
 }
