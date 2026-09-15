@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ActionLayer } from "@/components/actions/action-layer";
 import "./globals.css";
 
 export const metadata: Metadata = {
@@ -10,7 +11,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body><ActionLayer>{children}</ActionLayer></body>
     </html>
   );
 }

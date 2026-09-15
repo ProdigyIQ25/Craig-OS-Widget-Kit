@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useWidgetData } from "@/components/widgets/data-widgets";
 import { mediaTheaterRegistry, parseMediaTheaterMode, type MediaTheaterMode, type TheaterDefinition } from "@/lib/media-theater";
+import { ActionButton } from "@/components/actions/action-layer";
 import type { MediaItem } from "@/lib/widget-data/media";
 
 type TheaterItem=Omit<MediaItem,"favorite">;
@@ -59,7 +60,7 @@ export function MediaTheater({mode,embedded=false}:{mode:MediaTheaterMode;embedd
         </aside>
       </div>
     </>}
-    <footer className="theater-capture"><div><p className="os-eyebrow">CAPTURE IN CONTEXT</p><p>Existing certified deep links only. Notion writes: 0.</p></div><nav aria-label={`${definition.label} media capture`}>{definition.captures.map(action=><a key={action.label} href={action.href} target="_blank" rel="noreferrer">{action.label}</a>)}</nav></footer>
+    <footer className="theater-capture"><div><p className="os-eyebrow">CAPTURE IN CONTEXT</p><p>Approved insights and brand ideas use bounded capture. Sensitive actions remain native.</p></div><nav aria-label={`${definition.label} media capture`}>{definition.captures.map(action=>action.actionId?<ActionButton key={action.label} actionId={action.actionId} label={action.label} preset={action.actionId==="A-P04"&&item?.url?{sourceUrl:item.url}:undefined}/>:<a key={action.label} href={action.href} target="_blank" rel="noreferrer">{action.label}</a>)}</nav></footer>
   </section>;
 }
 
@@ -70,5 +71,5 @@ function TheaterModeRail({definition}:{definition:TheaterDefinition}){
 
 export function MediaTheaterRoute(){
   const search=useSearchParams(),mode=parseMediaTheaterMode(search.get("mode")),definition=mediaTheaterRegistry[mode];
-  return <main className={`os-shell os-personal media-theater-page`} data-mode={mode}><header className="os-header"><div><p className="os-eyebrow">CRAIG OS · MEDIA</p><h1>Craig Media Theater</h1><p>Watch, listen, learn, reflect, and capture without leaving the operating system.</p></div><a className="theater-return" href={`/os/personal/command?mode=${personalTheaterModes.includes(mode)?mode:"focus"}`}>Return to Personal OS ↗</a></header><TheaterModeRail definition={definition}/><MediaTheater key={mode} mode={mode}/><footer className="os-footer"><span>Craig OS v0.7.0</span><span>Read-only P11 media · Archive=false · autoplay off</span></footer></main>;
+  return <main className={`os-shell os-personal media-theater-page`} data-mode={mode}><header className="os-header"><div><p className="os-eyebrow">CRAIG OS · MEDIA</p><h1>Craig Media Theater</h1><p>Watch, listen, learn, reflect, and capture without leaving the operating system.</p></div><a className="theater-return" href={`/os/personal/command?mode=${personalTheaterModes.includes(mode)?mode:"focus"}`}>Return to Personal OS ↗</a></header><TheaterModeRail definition={definition}/><MediaTheater key={mode} mode={mode}/><footer className="os-footer"><span>Craig OS v0.8.0</span><span>Read-only P11 media · bounded capture · autoplay off</span></footer></main>;
 }

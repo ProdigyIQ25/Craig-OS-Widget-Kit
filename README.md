@@ -2,7 +2,13 @@
 
 Secure, independently deployable widgets for Craig OS Notion surfaces.
 
-Version: `0.7.0`
+Version: `0.8.0`
+
+## XP-04 Governed Action Layer
+
+The Personal and Business command surfaces expose exactly 11 action-specific captures. Each route validates a fixed input contract, applies only its approved defaults, writes to one hard-coded canonical destination, rejects extra fields and invalid vocabularies, requires a same-origin signed CSRF session, rate-limits requests, and reuses successful idempotency results. The browser receives only minimal success metadata and refreshes the affected read model after a confirmed write.
+
+Writes use `NOTION_ACTION_TOKEN`, a separate server-only connection shared only with P03, P07, P08, P09, P10, B03, B05, B06, B07, B08, and B10. The existing `NOTION_TOKEN` remains read-only. P05, P06, P12, relations, destructive operations, generic database selection, and arbitrary properties are not exposed.
 
 ## XP-03 Craig Media Theater
 
@@ -68,10 +74,11 @@ npx playwright test
 
 Browser → widget → server route → exact canonical Notion data source. The CSP permits framing by Notion origins, blocks objects and unneeded browser capabilities, and allows network connections only to this deployment from the browser. Optional URL parameters are sanitized and contain no credentials.
 
-No persistence, authentication platform, AI, automations, media-account integration, Notion writes, synthetic history, or additional widget families are included.
+No local persistence, authentication platform, AI, automations, media-account integration, synthetic history, or additional widget families are included. Notion insertion is limited to the XP-04 action registry and its dedicated connection.
 
 ## Known limitations
 
 - Notion controls the final embed height and surrounding chrome.
 - Empty P11 filters render a context-specific empty state until approved public URLs are supplied; autoplay and simulated playback are intentionally absent.
 - Live data widgets require the read-only Notion integration shared only with B03, B05, B07, B08, B09, B10, B11, and P11.
+- Idempotency uses an in-process pending lock plus Vercel Runtime Cache. The cache is bounded and regional, so a durable multi-region ledger would require a separately authorized persistence service.
