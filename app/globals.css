@@ -240,11 +240,11 @@ div.media-player { aspect-ratio: 16 / 9; }
 .os-section-title h2 { margin:.35rem 0 0; font-size:clamp(1.2rem,2.5vw,1.65rem); font-weight:620; letter-spacing:-.035em; }
 .os-section-title>a { flex:0 0 auto; color:var(--os-accent); font-size:.78rem; }
 .os-compact-list { display:grid; }
-.os-compact-list>a { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.35rem 1rem; min-height:54px; align-items:center; padding:.75rem 0; border-bottom:1px solid var(--os-border); color:var(--os-text); text-decoration:none; }
-.os-compact-list>a:first-child { border-top:1px solid var(--os-border); }
+.os-compact-list>div { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.35rem 1rem; min-height:54px; align-items:center; padding:.75rem 0; border-bottom:1px solid var(--os-border); color:var(--os-text); }
+.os-compact-list>div:first-child { border-top:1px solid var(--os-border); }
 .os-compact-list strong { min-width:0; overflow-wrap:anywhere; font-size:.93rem; font-weight:590; }
-.os-compact-list span { color:var(--os-muted); font-size:.75rem; text-align:right; }
-.os-compact-list a[data-tone="critical"] strong { color:var(--os-critical); }
+.os-compact-list>div>span { display:grid; gap:.2rem; min-width:0; }.os-compact-list small { color:var(--os-muted); font-size:.75rem; }
+.os-compact-list div[data-tone="critical"] strong { color:var(--os-critical); }
 .os-empty { margin:0; padding:1rem 0; border-block:1px solid var(--os-border); color:var(--os-muted); font-size:.88rem; }
 .os-actions { display:flex; flex-wrap:wrap; gap:.65rem; margin-top:1.25rem; }
 .os-actions a,.os-actions button { min-height:44px; display:inline-flex; align-items:center; padding:.65rem .9rem; border:1px solid var(--os-border); border-radius:.65rem; background:transparent; color:var(--os-text); cursor:pointer; text-decoration:none; }
@@ -279,10 +279,16 @@ div.media-player { aspect-ratio: 16 / 9; }
 .os-error h2 { margin:.75rem 0; font-size:clamp(1.5rem,4vw,2.4rem); }.os-error>p:last-of-type { color:var(--os-muted); line-height:1.55; }
 .os-fresh { display:block; padding:1rem 0; color:var(--os-muted); font-size:.7rem; text-align:right; }
 .os-footer { display:flex; justify-content:space-between; gap:1rem; margin:0; padding:1.2rem 0 .25rem; color:var(--os-muted); font-size:.68rem; }
+.os-detail-trigger { min-height:38px; padding:.45rem .65rem; border:1px solid var(--os-border); border-radius:.55rem; background:var(--os-surface); color:var(--os-accent); cursor:pointer; font:inherit; font-size:.72rem; font-weight:720; white-space:nowrap; }
+.os-detail-trigger:hover { border-color:var(--os-accent); background:var(--os-elevated); }
+.os-detail-backdrop { position:fixed; z-index:50; inset:0; display:flex; justify-content:flex-end; background:rgba(14,18,24,.36); backdrop-filter:blur(3px); }
+.os-detail-drawer { display:flex; flex-direction:column; width:min(34rem,100%); height:100%; padding:clamp(1.25rem,3vw,2.25rem); overflow:auto; border-left:1px solid var(--os-border); background:var(--os-elevated); box-shadow:-24px 0 60px rgba(0,0,0,.18); color:var(--os-text); }
+.os-detail-drawer header { display:flex; justify-content:space-between; gap:1rem; padding-bottom:1.35rem; border-bottom:1px solid var(--os-border); }.os-detail-drawer h2 { margin:.45rem 0; font-size:clamp(1.65rem,3vw,2.4rem); letter-spacing:-.045em; }.os-detail-drawer header p:last-child,.os-detail-drawer section>p:last-child { margin:.35rem 0 0; color:var(--os-muted); line-height:1.55; }
+.os-detail-drawer header button,.os-detail-drawer footer button,.os-detail-drawer footer a { min-height:44px; padding:.65rem .85rem; border:1px solid var(--os-border); border-radius:.65rem; background:transparent; color:var(--os-text); cursor:pointer; font:inherit; text-decoration:none; }.os-detail-drawer header button { flex:0 0 auto; }.os-detail-drawer section { padding:1.25rem 0; border-bottom:1px solid var(--os-border); }.os-detail-drawer section>strong { display:block; margin-top:.45rem; color:var(--os-accent); }.os-detail-drawer dl { display:grid; gap:.7rem; margin:.75rem 0 0; }.os-detail-drawer dl>div { display:flex; justify-content:space-between; gap:1rem; }.os-detail-drawer dt { color:var(--os-muted); }.os-detail-drawer dd { margin:0; text-align:right; }.os-detail-drawer footer { display:flex; flex-wrap:wrap; gap:.65rem; margin-top:auto; padding-top:1.5rem; }.os-detail-drawer footer a { border-color:transparent; background:var(--os-text); color:var(--os-bg); }
 
 @media (max-width:900px){.os-pulse-line{grid-template-columns:repeat(3,minmax(0,1fr))}.os-business-grid{grid-template-columns:1fr}.os-business-grid span{min-height:0}}
 @media (max-width:700px){.os-header{gap:1rem}.os-hero-grid,.os-module-flow,.os-split{grid-template-columns:1fr}.os-live em{display:none}.os-section-title{align-items:flex-start}.os-loading{grid-template-columns:1fr}.os-business .os-split>.os-capture{padding-top:0}.os-capture>div>a,.os-capture>div>button{flex:1 1 calc(33% - .55rem);justify-content:center}}
-@media (max-width:430px){.os-shell{padding:.85rem}.os-header h1{font-size:2.25rem}.os-header>div>p:last-child{max-width:13rem}.os-live strong{font-size:1.2rem}.os-live span{max-width:7rem;text-align:right}.os-mode-rail{margin:0 -.85rem;padding-inline:.85rem}.os-hero-grid{padding-top:1.25rem}.os-compact-list>a{grid-template-columns:1fr}.os-compact-list span{text-align:left}.os-capture>div>a,.os-capture>div>button{flex:1 1 calc(50% - .55rem)}.os-pulse-line{grid-template-columns:repeat(2,minmax(0,1fr))}.os-footer{align-items:flex-start;flex-direction:column}.os-section-title>a{min-height:44px;display:flex;align-items:center}.os-fresh{text-align:left}}
+@media (max-width:430px){.os-shell{padding:.85rem}.os-header h1{font-size:2.25rem}.os-header>div>p:last-child{max-width:13rem}.os-live strong{font-size:1.2rem}.os-live span{max-width:7rem;text-align:right}.os-mode-rail{margin:0 -.85rem;padding-inline:.85rem}.os-hero-grid{padding-top:1.25rem}.os-compact-list>div{grid-template-columns:1fr}.os-capture>div>a,.os-capture>div>button{flex:1 1 calc(50% - .55rem)}.os-pulse-line{grid-template-columns:repeat(2,minmax(0,1fr))}.os-footer{align-items:flex-start;flex-direction:column}.os-section-title>a{min-height:44px;display:flex;align-items:center}.os-fresh{text-align:left}}
 @media (max-width:340px){.os-live span{display:none}.os-capture>div>a,.os-capture>div>button{flex-basis:100%}.os-pulse-line{grid-template-columns:1fr}}
 
 /* XP-02 stateful operating mode engine */
