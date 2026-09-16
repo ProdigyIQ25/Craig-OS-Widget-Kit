@@ -16,9 +16,12 @@ function row(values:Record<string,string|number|boolean|null>):NotionRow{
   return {id:crypto.randomUUID(),properties};
 }
 
-test("media filters accept only locked modes, types, and aliases",()=>{
-  assert.deepEqual(normalizeMode("deep-work"),["DEEP WORK","WRITING"]);
+test("media filters keep each certified Theater context isolated",()=>{
+  assert.deepEqual(normalizeMode("deep-work"),["DEEP WORK"]);
+  assert.deepEqual(normalizeMode("focus"),["DEEP WORK"]);
   assert.deepEqual(normalizeMode("spiritual"),["SPIRITUAL"]);
+  assert.deepEqual(normalizeMode("learning"),["LEARNING"]);
+  assert.deepEqual(normalizeMode("writing"),["WRITING"]);
   assert.equal(normalizeMode("invented"),null);
   assert.deepEqual(normalizeMediaTypes(["music","AUDIO","music"]),["MUSIC","AUDIO"]);
   assert.equal(normalizeMediaTypes(["MOVIE"]),null);

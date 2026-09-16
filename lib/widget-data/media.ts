@@ -7,7 +7,7 @@ export type MediaType=typeof MEDIA_TYPES[number]; export type MediaMode=typeof M
 export type ProviderKind="youtube"|"spotify"|"vimeo"|"loom"|"direct-audio"|"direct-video"|"external"|"unavailable";
 export type MediaItem={id:string;title:string;mediaType:string;platform:string;url:string|null;mode:string;purpose:string;duration:number|null;relatedContext:string;favorite:boolean;provider:ProviderKind;embedUrl:string|null};
 
-const MODE_FILTERS:Record<string,MediaMode[]>={"deep-work":["DEEP WORK","WRITING"],focus:["DEEP WORK","WRITING"],spiritual:["SPIRITUAL"],learning:["LEARNING"],writing:["WRITING"],reflection:["REFLECTION"],exercise:["EXERCISE"],relaxation:["RELAXATION"],general:["GENERAL"]};
+const MODE_FILTERS:Record<string,MediaMode[]>={"deep-work":["DEEP WORK"],focus:["DEEP WORK"],spiritual:["SPIRITUAL"],learning:["LEARNING"],writing:["WRITING"],reflection:["REFLECTION"],exercise:["EXERCISE"],relaxation:["RELAXATION"],general:["GENERAL"]};
 export function normalizeMode(input:string|null):MediaMode[]|null {const key=(input??"deep-work").trim().toLowerCase();return MODE_FILTERS[key]??null}
 export function normalizeMediaTypes(inputs:string[]):MediaType[]|null {const normalized=inputs.map(v=>v.trim().toUpperCase());if(normalized.some(v=>!(MEDIA_TYPES as readonly string[]).includes(v)))return null;return [...new Set(normalized)] as MediaType[]}
 
