@@ -35,6 +35,7 @@ export const notion = {
   personalDecision: "https://www.notion.so/4c11a712c39a4176ba7a41a8a96c236c",
   brandIdea: "https://www.notion.so/fc7b4765360e47b48d6063f3837038ee",
   knowledge: "https://www.notion.so/e7075ed9959141d89382b515a0c09397",
+  mediaLibrary: "https://www.notion.so/d5c978173aab4da9b6ae4f075d3b21e2",
   commitment: "https://www.notion.so/fc64e6a23d2a4065a28a6da487f23a67",
   personalSignal: "https://www.notion.so/b37baae9772d4581b39149217c142050",
   opportunity: "https://www.notion.so/4955ac345ac748e3b54128019a0a716a",

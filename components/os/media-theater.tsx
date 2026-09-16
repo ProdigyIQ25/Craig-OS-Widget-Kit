@@ -6,6 +6,7 @@ import { useWidgetData } from "@/components/widgets/data-widgets";
 import { mediaTheaterRegistry, parseMediaTheaterMode, type MediaTheaterMode, type TheaterDefinition } from "@/lib/media-theater";
 import { ActionButton } from "@/components/actions/action-layer";
 import type { MediaItem } from "@/lib/widget-data/media";
+import { notion } from "@/lib/os-data/modes";
 
 type TheaterItem=Omit<MediaItem,"favorite">;
 type NativeState="LOADING"|"READY"|"PLAYING"|"PAUSED"|"ENDED"|"ERROR";
@@ -28,7 +29,7 @@ function TheaterPlayer({item,onState}:{item:TheaterItem;onState:(state:NativeSta
 
 function TheaterStatus({state,detail,empty}:{state:string;detail?:string;empty:string}){
   const title=state==="loading"?"Loading media context…":state==="disabled"?"Media connection is not configured":state==="error"?"Media is temporarily unavailable":empty;
-  return <section className="theater-status" data-state={state} role={state==="error"?"alert":"status"}><span>{state.toUpperCase()}</span><h3>{title}</h3><p>{detail??(state==="empty"?"P11 remains canonical. No media record has been fabricated.":"Canonical media state is being resolved.")}</p></section>;
+  return <section className="theater-status" data-state={state} role={state==="error"?"alert":"status"}><span>{state.toUpperCase()}</span><h3>{title}</h3><p>{detail??(state==="empty"?"P11 remains canonical. No media record has been fabricated.":"Canonical media state is being resolved.")}</p>{state==="empty"?<a href={notion.mediaLibrary} target="_blank" rel="noreferrer">Open Media Library in Notion ↗</a>:null}</section>;
 }
 
 export function MediaTheater({mode,embedded=false}:{mode:MediaTheaterMode;embedded?:boolean}){
@@ -71,5 +72,5 @@ function TheaterModeRail({definition}:{definition:TheaterDefinition}){
 
 export function MediaTheaterRoute(){
   const search=useSearchParams(),mode=parseMediaTheaterMode(search.get("mode")),definition=mediaTheaterRegistry[mode];
-  return <main className={`os-shell os-personal media-theater-page`} data-mode={mode}><header className="os-header"><div><p className="os-eyebrow">CRAIG OS · MEDIA</p><h1>Craig Media Theater</h1><p>Watch, listen, learn, reflect, and capture without leaving the operating system.</p></div><a className="theater-return" href={`/os/personal/command?mode=${personalTheaterModes.includes(mode)?mode:"focus"}`}>Return to Personal OS ↗</a></header><TheaterModeRail definition={definition}/><MediaTheater key={mode} mode={mode}/><footer className="os-footer"><span>Craig OS v0.10.0</span><span>Read-only P11 media · bounded capture · autoplay off</span></footer></main>;
+  return <main className={`os-shell os-personal media-theater-page`} data-mode={mode}><header className="os-header"><div><p className="os-eyebrow">CRAIG OS · MEDIA</p><h1>Craig Media Theater</h1><p>Watch, listen, learn, reflect, and capture without leaving the operating system.</p></div><a className="theater-return" href={`/os/personal?mode=${personalTheaterModes.includes(mode)?mode:"focus"}`}>Return to Personal OS ↗</a></header><TheaterModeRail definition={definition}/><MediaTheater key={mode} mode={mode}/><footer className="os-footer"><span>Craig OS v0.11.0</span><span>Read-only P11 media · bounded capture · autoplay off</span></footer></main>;
 }

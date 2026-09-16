@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { success } from "@/lib/api-contract";
+import packageJson from "../../../package.json";
 
 export const dynamic = "force-dynamic";
 
@@ -9,7 +10,7 @@ export function GET() {
       status: "ok",
       app: "craig-os-widget-kit",
       environment: process.env.APP_ENV ?? process.env.VERCEL_ENV ?? "development",
-      version: "0.4.1",
+      version: packageJson.version,
       timestamp: new Date().toISOString()
     }),
     { status: 200, headers: { "Cache-Control": "no-store" } }
