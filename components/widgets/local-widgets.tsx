@@ -53,7 +53,7 @@ function TimeReadout({ seconds }: { seconds: number }) {
 
 export function FocusWidget() {
   const timer = useTimer(); const [custom, setCustom] = useState("40");
-  return <ClientWidgetPage code="CW-02 · FOCUS TIMER" title="Protected Focus" footer="Ephemeral browser state · P12 writes: 0">{(config) => <>
+  return <ClientWidgetPage code="FOCUS TIMER" title="Focus Timer" footer="Your session stays in this browser">{(config) => <>
     <section className="timer-panel"><p className="timer-readout" aria-live="polite"><TimeReadout seconds={timer.remaining} /></p><span className="mode-chip">{config.mode ?? timer.state}</span></section>
     <div className="segmented" aria-label="Timer presets">{presets.map(p => <button key={p} onClick={() => timer.choose(p)}>{p} min</button>)}</div>
     <div className="input-row"><label htmlFor="custom-minutes">Custom minutes</label><input id="custom-minutes" inputMode="numeric" value={custom} onChange={e=>setCustom(e.target.value.replace(/\D/g,"").slice(0,3))}/><button onClick={()=>timer.choose(Number(custom)||1)}>Set</button></div>
