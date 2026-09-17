@@ -29,10 +29,10 @@ function TheaterPlayer({item,onState}:{item:TheaterItem;onState:(state:NativeSta
 
 function TheaterStatus({state,detail,empty}:{state:string;detail?:string;empty:string}){
   const title=state==="loading"?"Loading media context…":state==="disabled"?"Media connection is not configured":state==="error"?"Media is temporarily unavailable":empty;
-  return <section className="theater-status" data-state={state} role={state==="error"?"alert":"status"}><span>{state.toUpperCase()}</span><h3>{title}</h3><p>{detail??(state==="empty"?"P11 remains canonical. No media record has been fabricated.":"Canonical media state is being resolved.")}</p>{state==="empty"?<a href={notion.mediaLibrary} target="_blank" rel="noreferrer">Open Media Library in Notion ↗</a>:null}</section>;
+  return <section className="theater-status" data-state={state} role={state==="error"?"alert":"status"}><span>{state.toUpperCase()}</span><h3>{title}</h3><p>{detail??(state==="empty"?"Add media when it will support this mode.":"Your media context is being resolved.")}</p>{state==="empty"?<a href={notion.mediaLibrary} target="_blank" rel="noreferrer">Manage media ↗</a>:null}</section>;
 }
 
-export function MediaTheater({mode,embedded=false}:{mode:MediaTheaterMode;embedded?:boolean}){
+export function MediaTheater({mode,embedded=false,compact=false}:{mode:MediaTheaterMode;embedded?:boolean;compact?:boolean}){
   const definition=mediaTheaterRegistry[mode];
   const path=useMemo(()=>`/api/widgets/media?mode=${encodeURIComponent(definition.apiMode)}`,[definition.apiMode]);
   const result=useWidgetData<{items:TheaterItem[]}>(path);
@@ -45,7 +45,7 @@ export function MediaTheater({mode,embedded=false}:{mode:MediaTheaterMode;embedd
   const playerState=item?.provider==="unavailable"?"UNAVAILABLE":item?.provider==="external"?"EXTERNAL PROVIDER":item?.embedUrl?"EXTERNAL PROVIDER":nativeState;
   const select=(id:string)=>{setNativeState("LOADING");setSelectedId(id)};
 
-  return <section className={`media-theater media-theater-${mode}${embedded?" is-embedded":""}`} data-theater-mode={mode} data-active-players={item?"1":"0"}>
+  return <section className={`media-theater media-theater-${mode}${embedded?" is-embedded":""}${compact?" is-compact":""}`} data-theater-mode={mode} data-active-players={item?"1":"0"}>
     <header className="theater-header"><div><p className="os-eyebrow">{definition.eyebrow}</p><h2>{definition.heading}</h2><p>{definition.description}</p></div><span>{definition.label}</span></header>
     {result.state!=="success"?<TheaterStatus state={result.state} detail={result.detail} empty={definition.emptyState}/>:!items.length?<TheaterStatus state="empty" empty={definition.emptyState}/>:<>
       <div className="theater-layout">
@@ -61,7 +61,7 @@ export function MediaTheater({mode,embedded=false}:{mode:MediaTheaterMode;embedd
         </aside>
       </div>
     </>}
-    <footer className="theater-capture"><div><p className="os-eyebrow">CAPTURE IN CONTEXT</p><p>Approved insights and brand ideas use bounded capture. Sensitive actions remain native.</p></div><nav aria-label={`${definition.label} media capture`}>{definition.captures.map(action=>action.actionId?<ActionButton key={action.label} actionId={action.actionId} label={action.label} preset={action.actionId==="A-P04"&&item?.url?{sourceUrl:item.url}:undefined}/>:<a key={action.label} href={action.href} target="_blank" rel="noreferrer">{action.label}</a>)}</nav></footer>
+    <footer className="theater-capture"><div><p className="os-eyebrow">CAPTURE IN CONTEXT</p><p>Keep the useful insight. Return to the work when you are ready.</p></div><nav aria-label={`${definition.label} media capture`}>{definition.captures.map(action=>action.actionId?<ActionButton key={action.label} actionId={action.actionId} label={action.label} preset={action.actionId==="A-P04"&&item?.url?{sourceUrl:item.url}:undefined}/>:<a key={action.label} href={action.href} target="_blank" rel="noreferrer">{action.label}</a>)}</nav></footer>
   </section>;
 }
 
@@ -72,5 +72,5 @@ function TheaterModeRail({definition}:{definition:TheaterDefinition}){
 
 export function MediaTheaterRoute(){
   const search=useSearchParams(),mode=parseMediaTheaterMode(search.get("mode")),definition=mediaTheaterRegistry[mode];
-  return <main className={`os-shell os-personal media-theater-page`} data-mode={mode}><header className="os-header"><div><p className="os-eyebrow">CRAIG OS · MEDIA</p><h1>Craig Media Theater</h1><p>Watch, listen, learn, reflect, and capture without leaving the operating system.</p></div><a className="theater-return" href={`/os/personal?mode=${personalTheaterModes.includes(mode)?mode:"focus"}`}>Return to Personal OS ↗</a></header><TheaterModeRail definition={definition}/><MediaTheater key={mode} mode={mode}/><footer className="os-footer"><span>Craig OS v0.11.1</span><span>Read-only P11 media · bounded capture · autoplay off</span></footer></main>;
+  return <main className={`os-shell os-personal media-theater-page`} data-mode={mode}><header className="os-header"><div><p className="os-eyebrow">CRAIG OS · MEDIA</p><h1>Craig Media Theater</h1><p>Watch, listen, learn, reflect, and capture without leaving the operating system.</p></div><a className="theater-return" href={`/os/personal?mode=${personalTheaterModes.includes(mode)?mode:"focus"}`}>Return to Personal OS ↗</a></header><TheaterModeRail definition={definition}/><MediaTheater key={mode} mode={mode}/><footer className="os-footer"><span>Craig OS</span><a href={notion.mediaLibrary} target="_blank" rel="noreferrer">Manage media details ↗</a></footer></main>;
 }

@@ -24,9 +24,9 @@ test("mode parsing defaults safely and keeps Personal and Business isolated",()=
   assert.equal(parsePersonalMode("focus"),"focus");assert.equal(parseBusinessMode("worktelli"),"worktelli");
 });
 
-test("sensitive and unavailable modes retain explicit access boundaries",()=>{
-  assert.match(personalModeRegistry.spiritual.emptyState,/Private prayer and journal/);
-  assert.match(personalModeRegistry.brand.emptyState,/P07 read access/);
-  assert.match(personalModeRegistry.growth.emptyState,/P08 read access/);
-  assert.match(businessModeRegistry.clients.emptyState,/B01\/B02/);
+test("sensitive and unavailable modes retain a clear human-facing boundary",()=>{
+  assert.match(personalModeRegistry.spiritual.emptyState,/Prayer and journal entries are kept private/);
+  assert.match(personalModeRegistry.brand.emptyState,/active brand work/);
+  assert.match(personalModeRegistry.growth.emptyState,/Choose a topic/);
+  assert.match(businessModeRegistry.clients.emptyState,/relationship/);
 });

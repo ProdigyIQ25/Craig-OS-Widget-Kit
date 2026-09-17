@@ -9,16 +9,16 @@ for(const [scope,data] of [["personal",personal],["business",business]] as const
 
 for(const [name,changes,expected] of [
   ["normal populated",{},"Protect the priority"],
-  ["minimal",{attention:[],decisions:[],signals:[],focus:null,media:null,rhythms:{active:0,attention:0,healthy:0}},"Nothing currently requires attention."],
-  ["no attention",{attention:[]},"Nothing currently requires attention."],
-  ["no focus",{focus:null},"No current focus selected."],
-  ["no media",{media:null},"No current media"],
+  ["minimal",{attention:[],decisions:[],signals:[],focus:null,media:null,rhythms:{active:0,attention:0,healthy:0}},"Everything is clear right now. Add a commitment when a priority needs your attention."],
+  ["no attention",{attention:[]},"Everything is clear right now. Add a commitment when a priority needs your attention."],
+  ["no focus",{focus:null},"Choose one priority"],
+  ["no media",{media:null},"Your supporting media"],
   ["open decisions",{decisions:personal.decisions},"Choose the next move"],
   ["signals present",{signals:personal.signals},"Capacity is improving"]
 ] as const)test(`personal state: ${name}`,async({page})=>{await mock(page,"personal",{...personal,...changes});await page.goto("/os/personal/command");await expect(page.getByText(expected,{exact:true}).first()).toBeVisible()});
 
 for(const [name,changes,expected] of [
-  ["empty",{requiresDavid:[],decisions:[],exceptions:[],signals:[],revenue:{activeCount:0,estimatedValue:0,topOpportunity:null},workforce:{healthy:0,attention:0,waiting:0,degraded:0,offline:0,totalActive:0}},"No executive decisions or exceptions require attention."],
+  ["empty",{requiresDavid:[],decisions:[],exceptions:[],signals:[],revenue:{activeCount:0,estimatedValue:0,topOpportunity:null},workforce:{healthy:0,attention:0,waiting:0,degraded:0,offline:0,totalActive:0}},"Nothing needs an executive decision right now."],
   ["decisions only",{requiresDavid:business.requiresDavid,decisions:business.decisions,exceptions:[]},"Approve the proposal"],
   ["exceptions only",{requiresDavid:[{kind:"EXCEPTION",title:"Production constraint",detail:"HIGH · TRIAGE",tone:"critical",href:"https://www.notion.so/e"}],decisions:[],exceptions:[{kind:"EXCEPTION",title:"Production constraint",detail:"HIGH · TRIAGE",tone:"critical",href:"https://www.notion.so/e"}]},"Production constraint"],
   ["Worktelli",{worktelli:business.worktelli},"PRODUCTION"],
@@ -27,4 +27,4 @@ for(const [name,changes,expected] of [
   ["mixed",{},"Customer pull"]
 ] as const)test(`business state: ${name}`,async({page})=>{await mock(page,"business",{...business,...changes});await page.goto("/os/business/command");await expect(page.getByText(expected,{exact:true}).first()).toBeVisible()});
 
-for(const scope of ["personal","business"] as const)test(`${scope} API failure never substitutes fixture data`,async({page})=>{await page.route(`**/api/os/${scope}/command`,route=>route.fulfill({status:503,contentType:"application/json",body:JSON.stringify({ok:false,data:null,source:"notion",generatedAt:new Date().toISOString(),error:{code:"UPSTREAM_UNAVAILABLE",message:"Canonical source unavailable"}})}));await page.goto(`/os/${scope}/command`);await expect(page.getByText("Unable to load current operating state.",{exact:true})).toBeVisible();await expect(page.getByText("Canonical data was not replaced.",{exact:false})).toBeVisible()});
+for(const scope of ["personal","business"] as const)test(`${scope} API failure never substitutes fixture data`,async({page})=>{await page.route(`**/api/os/${scope}/command`,route=>route.fulfill({status:503,contentType:"application/json",body:JSON.stringify({ok:false,data:null,source:"notion",generatedAt:new Date().toISOString(),error:{code:"UPSTREAM_UNAVAILABLE",message:"Canonical source unavailable"}})}));await page.goto(`/os/${scope}/command`);await expect(page.getByText("Your current operating state could not load.",{exact:true})).toBeVisible();await expect(page.getByText("No replacement data is shown.",{exact:false})).toBeVisible()});
