@@ -6,6 +6,7 @@ import { COMMAND_SURFACE_ROUTES } from "@/lib/phase15/routes";
 import { davidCraigInstance } from "@/lib/phase15/config";
 import { BUSINESS_NAV } from "@/lib/phase15/nav";
 import type { BusinessCommandData, CommandRecord } from "@/lib/phase15/ui-models";
+import { destinationKeyFromKind } from "@/lib/phase15/record-detail";
 import { CaptureCommand } from "./capture-command";
 import { AskCommand } from "./ask-command";
 import { AppShell, CommandHeader, ContextSwitcher, NavigationRail } from "./shell";
@@ -77,9 +78,10 @@ function toRecords(
       .filter(Boolean)
       .join(" · ") || undefined,
     status: item.status ?? item.stage,
-    tone: item.severity === "HIGH" || item.severity === "CRITICAL" ? "critical" : "neutral",
+    tone: item.severity === "HIGH" || item.severity === "CRITICAL" ? ("critical" as const) : ("neutral" as const),
     notionUrl: item.notionUrl,
-    context: "business",
+    context: "business" as const,
+    destinationKey: destinationKeyFromKind(kind, "business") ?? undefined,
   }));
 }
 
@@ -399,7 +401,7 @@ export function BusinessCommandSurface({ surface }: { surface: BusinessSurface }
         </div>
       ) : null}
 
-      <RecordInspect record={inspect} open={Boolean(inspect)} onClose={() => setInspect(null)} contextLabel="Business" />
+      <RecordInspect record={inspect} open={Boolean(inspect)} onClose={() => setInspect(null)} contextLabel="Business" surface="business" />
     </AppShell>
   );
 }

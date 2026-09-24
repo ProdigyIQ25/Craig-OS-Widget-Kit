@@ -5,6 +5,7 @@ import Link from "next/link";
 import { COMMAND_SURFACE_ROUTES } from "@/lib/phase15/routes";
 import { PERSONAL_NAV } from "@/lib/phase15/nav";
 import type { CommandRecord, PersonalCommandData } from "@/lib/phase15/ui-models";
+import { destinationKeyFromKind } from "@/lib/phase15/record-detail";
 import { CaptureCommand } from "./capture-command";
 import { AskCommand } from "./ask-command";
 import { AppShell, CommandHeader, ContextSwitcher, NavigationRail } from "./shell";
@@ -57,8 +58,9 @@ function toRecords(
     detail: [item.dueDate, item.priority, item.summary, item.type].filter(Boolean).join(" · ") || undefined,
     status: item.status,
     notionUrl: item.notionUrl,
-    context: "personal",
-    tone: item.priority === "High" ? "attention" : "neutral",
+    context: "personal" as const,
+    tone: item.priority === "High" ? ("attention" as const) : ("neutral" as const),
+    destinationKey: destinationKeyFromKind(kind, "personal") ?? undefined,
   }));
 }
 
@@ -317,7 +319,7 @@ export function PersonalCommandSurface({ surface }: { surface: PersonalSurface }
         </div>
       ) : null}
 
-      <RecordInspect record={inspect} open={Boolean(inspect)} onClose={() => setInspect(null)} contextLabel="Personal" />
+      <RecordInspect record={inspect} open={Boolean(inspect)} onClose={() => setInspect(null)} contextLabel="Personal" surface="personal" />
     </AppShell>
   );
 }

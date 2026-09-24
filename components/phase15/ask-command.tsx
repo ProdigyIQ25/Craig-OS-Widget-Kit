@@ -2,7 +2,11 @@
 
 import { type FormEvent, useCallback, useEffect, useId, useRef, useState } from "react";
 import type { AskActionProposal, AskCitation, AskResponse, AskSurfaceContext } from "@/lib/phase15/ask";
+import type { CaptureDestinationKey } from "@/lib/phase15/governed-action";
+import { destinationKeyFromKind } from "@/lib/phase15/record-detail";
+import type { CommandRecord } from "@/lib/phase15/ui-models";
 import { CaptureCommand, type CaptureSeed } from "./capture-command";
+import { RecordInspect } from "./record-inspect";
 
 type ChatMessage = {
   id: string;
@@ -20,6 +24,27 @@ function defaultSurfaceLabel(surface: AskSurfaceContext): string {
   return "Operating";
 }
 
+function citationToRecord(citation: AskCitation, surface: AskSurfaceContext): CommandRecord | null {
+  const context = citation.key.startsWith("business.")
+    ? "business"
+    : citation.key.startsWith("personal.")
+      ? "personal"
+      : surface === "business"
+        ? "business"
+        : "personal";
+  const destinationKey =
+    (citation.key as CaptureDestinationKey) || destinationKeyFromKind(citation.sourceLabel, context);
+  if (!destinationKey) return null;
+  return {
+    id: citation.recordId,
+    title: citation.title,
+    kind: citation.sourceLabel,
+    notionUrl: citation.notionUrl,
+    context,
+    destinationKey,
+  };
+}
+
 export function AskCommand({ surface }: { surface: AskSurfaceContext }) {
   const dialogTitleId = useId();
   const inputId = useId();
@@ -29,6 +54,7 @@ export function AskCommand({ surface }: { surface: AskSurfaceContext }) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [seed, setSeed] = useState<CaptureSeed | null>(null);
+  const [inspect, setInspect] = useState<CommandRecord | null>(null);
   const listRef = useRef<HTMLDivElement | null>(null);
   const inputRef = useRef<HTMLTextAreaElement | null>(null);
 
@@ -47,7 +73,7 @@ export function AskCommand({ surface }: { surface: AskSurfaceContext }) {
   useEffect(() => {
     if (!open) return;
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") close();
+      if (event.key === "Escape" && !inspect) close();
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
@@ -67,6 +93,11 @@ export function AskCommand({ surface }: { surface: AskSurfaceContext }) {
       explicitSpiritualSave: proposal.explicitSpiritualSave,
       startAtPreview: true,
     });
+  };
+
+  const openCitation = (citation: AskCitation) => {
+    const record = citationToRecord(citation, surface);
+    if (record) setInspect(record);
   };
 
   const submit = async (event: FormEvent) => {
@@ -133,6 +164,14 @@ export function AskCommand({ surface }: { surface: AskSurfaceContext }) {
       </button>
 
       <CaptureCommand surface={surface === "home" ? "home" : surface} seed={seed} onSeedConsumed={clearSeed} hideTrigger />
+      <RecordInspect
+        record={inspect}
+        open={Boolean(inspect)}
+        onClose={() => setInspect(null)}
+        contextLabel="Ask"
+        surface={surface === "home" ? "home" : surface}
+        explicitSpiritual={surface === "spiritual"}
+      />
 
       {open ? (
         <div
@@ -182,8 +221,11 @@ export function AskCommand({ surface }: { surface: AskSurfaceContext }) {
                     <ul className="p15-ask-citations">
                       {item.citations.map((citation) => (
                         <li key={citation.recordId}>
-                          <a href={citation.notionUrl} target="_blank" rel="noreferrer">
+                          <button type="button" className="p15-ask-citation-open" onClick={() => openCitation(citation)}>
                             {citation.title}
+                          </button>
+                          <a href={citation.notionUrl} target="_blank" rel="noreferrer">
+                            Notion
                           </a>
                           <span>{citation.sourceLabel}</span>
                         </li>

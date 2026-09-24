@@ -27,6 +27,8 @@ export type CommandRecord = {
   tone?: "neutral" | "attention" | "critical" | "healthy";
   notionUrl: string;
   context: "personal" | "business";
+  /** Canonical store key when known; resolved from kind+context when omitted. */
+  destinationKey?: import("./governed-action").CaptureDestinationKey;
 };
 
 export type ModulePayload<T = CommandRecord[]> = {

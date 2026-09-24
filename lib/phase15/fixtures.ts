@@ -9,6 +9,7 @@ import type {
   PersonalCommandData,
 } from "./ui-models";
 import { emptyModule, populatedModule, unavailableModule } from "./ui-models";
+import { destinationKeyFromKind } from "./record-detail";
 
 const NOTION_HOME = "https://www.notion.so";
 
@@ -29,6 +30,7 @@ function record(
     status: tone === "attention" ? "Needs attention" : "Active",
     notionUrl: `${NOTION_HOME}/${id}`,
     context,
+    destinationKey: destinationKeyFromKind(kind, context) ?? undefined,
   };
 }
 

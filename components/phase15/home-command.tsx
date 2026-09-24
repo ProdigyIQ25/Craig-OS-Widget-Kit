@@ -166,7 +166,7 @@ export function HomeCommandCenter() {
         </div>
       ) : null}
 
-      <RecordInspect record={inspect} open={Boolean(inspect)} onClose={() => setInspect(null)} contextLabel="Home" />
+      <RecordInspect record={inspect} open={Boolean(inspect)} onClose={() => setInspect(null)} contextLabel="Home" surface="home" />
     </AppShell>
   );
 }
