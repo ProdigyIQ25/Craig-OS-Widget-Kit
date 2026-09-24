@@ -1,6 +1,6 @@
 export const DESIGN_KERNEL_VERSION = "15.3.0-foundation" as const;
 
-export const CERTIFIED_WIDTHS = [390, 430, 768, 1024, 1440] as const;
+export const CERTIFIED_WIDTHS = [360, 375, 390, 430, 768, 1024, 1440] as const;
 
 export type ColorMode = "light" | "dark";
 export type SurfaceContext = "personal" | "business" | "spiritual";

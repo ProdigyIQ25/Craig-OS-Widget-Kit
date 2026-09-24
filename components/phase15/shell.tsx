@@ -3,6 +3,9 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { CONTEXT_SWITCH, type NavItem } from "@/lib/phase15/nav";
+import { ConnectivityBanner } from "./connectivity-banner";
+import { MobileBottomNav } from "./mobile-bottom-nav";
+import { PwaRegister } from "./pwa-register";
 
 export function AppShell({
   context,
@@ -12,8 +15,11 @@ export function AppShell({
   children: ReactNode;
 }) {
   return (
-    <main className="p15-shell" data-context={context}>
-      {children}
+    <main className="p15-shell" data-context={context} data-pwa-shell="true">
+      <ConnectivityBanner />
+      <div className="p15-shell-body">{children}</div>
+      <MobileBottomNav />
+      <PwaRegister />
     </main>
   );
 }
@@ -67,7 +73,7 @@ export function NavigationRail({
   label?: string;
 }) {
   return (
-    <nav className="p15-rail" aria-label={label}>
+    <nav className="p15-rail" aria-label={label} data-rail="secondary">
       {items.map((item) => (
         <Link
           key={item.id}

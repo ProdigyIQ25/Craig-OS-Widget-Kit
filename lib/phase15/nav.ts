@@ -43,3 +43,12 @@ export const CONTEXT_SWITCH = [
   { id: "personal", label: "Personal", href: COMMAND_SURFACE_ROUTES.personal },
   { id: "business", label: "Business", href: COMMAND_SURFACE_ROUTES.business },
 ] as const;
+
+/** Primary mobile operating destinations — bottom navigation. */
+export const MOBILE_PRIMARY_NAV: NavItem[] = [
+  { id: "home", label: "Home", href: COMMAND_SURFACE_ROUTES.home },
+  { id: "today", label: "Today", href: COMMAND_SURFACE_ROUTES.personalToday },
+  { id: "focus", label: "Focus", href: COMMAND_SURFACE_ROUTES.personalFocus },
+  { id: "personal", label: "Personal", href: COMMAND_SURFACE_ROUTES.personal },
+  { id: "business", label: "Business", href: COMMAND_SURFACE_ROUTES.business },
+];

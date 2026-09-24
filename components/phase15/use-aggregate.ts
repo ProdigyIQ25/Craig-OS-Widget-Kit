@@ -38,10 +38,16 @@ export function useAggregate<T>(path: string) {
         generatedAt: body.generatedAt,
       });
     } catch {
+      const offline = typeof navigator !== "undefined" && navigator.onLine === false;
       setState({
         status: "error",
         data: null,
-        error: { code: "UPSTREAM_UNAVAILABLE", message: "Canonical source unavailable." },
+        error: {
+          code: offline ? "OFFLINE" : "UPSTREAM_UNAVAILABLE",
+          message: offline
+            ? "You are offline. Live Craig OS state cannot be verified."
+            : "Canonical source unavailable.",
+        },
         generatedAt: new Date().toISOString(),
       });
     }

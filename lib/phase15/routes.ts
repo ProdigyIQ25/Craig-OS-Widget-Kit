@@ -37,7 +37,7 @@ export const AGGREGATE_API_ROUTES = [
 
 export type AggregateApiRoute = (typeof AGGREGATE_API_ROUTES)[number];
 
-export const RESPONSIVE_WIDTHS = [390, 430, 768, 1024, 1440] as const;
+export const RESPONSIVE_WIDTHS = [360, 375, 390, 430, 768, 1024, 1440] as const;
 
 const PERSONAL_PREFIX = "/personal";
 const BUSINESS_PREFIX = "/business";
