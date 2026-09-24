@@ -213,7 +213,18 @@ export async function POST(request?: Request) {
       return fail(409, "DUPLICATE_REQUEST", "Idempotency key conflict.");
     }
     if (error instanceof Phase15RecordUpdateError) {
-      const status = error.code === "UPSTREAM_UNAVAILABLE" ? 503 : error.code === "READ_BACK_FAILED" ? 502 : 502;
+      const status =
+        error.code === "RECORD_DESTINATION_MISMATCH"
+          ? 403
+          : error.code === "RECORD_NOT_FOUND"
+            ? 404
+            : error.code === "VALIDATION_FAILED"
+              ? 400
+              : error.code === "DESTINATION_UNBOUND" || error.code === "UPSTREAM_UNAVAILABLE"
+                ? 503
+                : error.code === "READ_BACK_FAILED"
+                  ? 502
+                  : 502;
       return NextResponse.json(
         {
           ok: false,

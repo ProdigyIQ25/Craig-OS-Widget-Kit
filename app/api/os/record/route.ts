@@ -69,9 +69,11 @@ export async function GET(request?: Request) {
       const status =
         error.code === "RECORD_NOT_FOUND"
           ? 404
-          : error.code === "ACCESS_DENIED" || error.code === "CROSS_CONTEXT"
+          : error.code === "ACCESS_DENIED" ||
+              error.code === "CROSS_CONTEXT" ||
+              error.code === "RECORD_DESTINATION_MISMATCH"
             ? 403
-            : error.code === "UPSTREAM_UNAVAILABLE"
+            : error.code === "UPSTREAM_UNAVAILABLE" || error.code === "DESTINATION_UNBOUND"
               ? 503
               : 400;
       return fail(status, error.code, error.message);

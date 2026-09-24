@@ -4,13 +4,24 @@ import type { GovernedUpdatePatch } from "@/lib/phase15/governed-update";
 import { resolveDataSourceId, templateSource } from "@/lib/phase15/template-sources";
 import { readPhase15Record } from "@/lib/server/phase15-record-read";
 import type { CaptureContext } from "@/lib/phase15/governed-action";
+import type { RecordDetailErrorCode } from "@/lib/phase15/record-detail";
+import {
+  Phase15RecordOwnershipError,
+  verifyCanonicalRecordBinding,
+} from "@/lib/server/phase15-record-ownership";
 
 const NOTION_VERSION = "2025-09-03";
 
 export class Phase15RecordUpdateError extends Error {
   constructor(
     message: string,
-    public readonly code: "UPSTREAM_UNAVAILABLE" | "WRITE_FAILED" | "DESTINATION_UNBOUND" | "MUTATION_FAILED" | "READ_BACK_FAILED",
+    public readonly code:
+      | "UPSTREAM_UNAVAILABLE"
+      | "WRITE_FAILED"
+      | "DESTINATION_UNBOUND"
+      | "MUTATION_FAILED"
+      | "READ_BACK_FAILED"
+      | Extract<RecordDetailErrorCode, "RECORD_DESTINATION_MISMATCH" | "RECORD_NOT_FOUND" | "VALIDATION_FAILED">,
     public readonly upstreamStatus?: number,
     public readonly upstreamHint?: string,
   ) {
@@ -80,6 +91,29 @@ export async function updatePhase15Record(input: {
   }
   if (!resolveDataSourceId(input.destinationKey)) {
     throw new Phase15RecordUpdateError("Destination data source is unbound.", "DESTINATION_UNBOUND");
+  }
+
+  // Ownership must be proven before any mutation — same verifier as GET.
+  try {
+    await verifyCanonicalRecordBinding({
+      recordId: input.recordId,
+      destinationKey: input.destinationKey,
+    });
+  } catch (error) {
+    if (error instanceof Phase15RecordOwnershipError) {
+      throw new Phase15RecordUpdateError(
+        error.message,
+        error.code === "RECORD_DESTINATION_MISMATCH" ||
+          error.code === "RECORD_NOT_FOUND" ||
+          error.code === "VALIDATION_FAILED"
+          ? error.code
+          : error.code === "DESTINATION_UNBOUND"
+            ? "DESTINATION_UNBOUND"
+            : "UPSTREAM_UNAVAILABLE",
+        error.upstreamStatus,
+      );
+    }
+    throw error;
   }
 
   const properties = buildUpdateProperties(input.destinationKey, input.patch, source.properties);

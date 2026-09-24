@@ -20,7 +20,9 @@ export type RecordDetailErrorCode =
   | "MUTATION_FAILED"
   | "READ_BACK_FAILED"
   | "CONTEXT_REQUIRED"
-  | "CROSS_CONTEXT";
+  | "CROSS_CONTEXT"
+  | "RECORD_DESTINATION_MISMATCH"
+  | "DESTINATION_UNBOUND";
 
 export type RecordQuickEditField = "status" | "priority" | "dueDate" | "stage";
 

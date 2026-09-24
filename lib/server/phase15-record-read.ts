@@ -11,8 +11,10 @@ import {
 } from "@/lib/phase15/record-detail";
 import { templateSource } from "@/lib/phase15/template-sources";
 import { sanitizeRecordText } from "@/lib/phase15/ask";
-
-const NOTION_VERSION = "2025-09-03";
+import {
+  Phase15RecordOwnershipError,
+  verifyCanonicalRecordBinding,
+} from "@/lib/server/phase15-record-ownership";
 
 export class Phase15RecordReadError extends Error {
   constructor(
@@ -22,15 +24,6 @@ export class Phase15RecordReadError extends Error {
   ) {
     super(message);
   }
-}
-
-function readTokens(env: Record<string, string | undefined>): string[] {
-  const tokens: string[] = [];
-  if (env.NOTION_TOKEN) tokens.push(env.NOTION_TOKEN);
-  if (env.NOTION_ACTION_TOKEN && env.NOTION_ACTION_TOKEN !== env.NOTION_TOKEN) {
-    tokens.push(env.NOTION_ACTION_TOKEN);
-  }
-  return tokens;
 }
 
 function titleFromProperties(properties: Record<string, unknown> | undefined): string {
@@ -77,17 +70,6 @@ function relationIds(properties: Record<string, unknown> | undefined, name: stri
   return prop.relation.map((item) => item.id).filter((id): id is string => Boolean(id));
 }
 
-async function fetchNotionPage(recordId: string, token: string): Promise<Response> {
-  return fetch(`https://api.notion.com/v1/pages/${recordId}`, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Notion-Version": NOTION_VERSION,
-    },
-    cache: "no-store",
-  });
-}
-
 export async function readPhase15Record(input: {
   recordId: string;
   destinationKey: CaptureDestinationKey;
@@ -110,35 +92,23 @@ export async function readPhase15Record(input: {
     throw new Phase15RecordReadError("Destination is not mapped.", "ACCESS_DENIED");
   }
 
-  const tokens = readTokens(env);
-  if (!tokens.length) {
-    throw new Phase15RecordReadError("Read credentials are not configured.", "UPSTREAM_UNAVAILABLE");
+  let binding;
+  try {
+    binding = await verifyCanonicalRecordBinding({
+      recordId: input.recordId,
+      destinationKey: input.destinationKey,
+      env,
+    });
+  } catch (error) {
+    if (error instanceof Phase15RecordOwnershipError) {
+      throw new Phase15RecordReadError(error.message, error.code, error.upstreamStatus);
+    }
+    throw error;
   }
 
-  let lastStatus = 0;
-  type NotionPage = {
-    id?: string;
-    url?: string;
-    properties?: Record<string, unknown>;
-    parent?: { type?: string; data_source_id?: string; database_id?: string };
-  };
-  let page: NotionPage | null = null;
-
-  for (const token of tokens) {
-    const response = await fetchNotionPage(input.recordId, token);
-    lastStatus = response.status;
-    if (response.status === 404) continue;
-    if (!response.ok) continue;
-    page = (await response.json()) as NotionPage;
-    break;
-  }
-
-  if (lastStatus === 404 && !page) {
-    throw new Phase15RecordReadError("Record was not found.", "RECORD_NOT_FOUND", 404);
-  }
-
-  if (!page?.id || !page.properties) {
-    throw new Phase15RecordReadError(`Upstream returned ${lastStatus || "error"}.`, "UPSTREAM_UNAVAILABLE", lastStatus);
+  const page = binding.page;
+  if (!page.properties) {
+    throw new Phase15RecordReadError("Record payload was incomplete.", "UPSTREAM_UNAVAILABLE");
   }
 
   const properties = page.properties;
@@ -176,14 +146,13 @@ export async function readPhase15Record(input: {
   pushRelation("Opportunity", relationIds(properties, "Opportunity"));
   pushRelation("Issue", relationIds(properties, "Issue"));
 
-  // Never attach spiritual stores as relation previews.
   const safeRelationships = isSpiritualDestination(input.destinationKey)
     ? relationships
     : relationships.filter((item) => item.label !== "Prayer" && item.label !== "Spiritual Journal");
 
-  const compactId = page.id.replaceAll("-", "");
+  const compactId = binding.recordId.replaceAll("-", "");
   return {
-    recordId: page.id,
+    recordId: binding.recordId,
     destinationKey: input.destinationKey,
     context: input.context,
     recordType: source.logicalName,
