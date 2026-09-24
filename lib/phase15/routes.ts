@@ -1,5 +1,6 @@
 export const COMMAND_SURFACE_ROUTES = {
   home: "/",
+  ask: "/ask",
   personal: "/personal",
   personalToday: "/personal/today",
   personalFocus: "/personal/focus",
@@ -44,7 +45,7 @@ const SPIRITUAL_ROUTE = COMMAND_SURFACE_ROUTES.personalSpiritual;
 
 export function routeContext(pathname: string): "home" | "personal" | "business" | "spiritual" | "unknown" {
   if (pathname === SPIRITUAL_ROUTE) return "spiritual";
-  if (pathname === COMMAND_SURFACE_ROUTES.home) return "home";
+  if (pathname === COMMAND_SURFACE_ROUTES.home || pathname === COMMAND_SURFACE_ROUTES.ask) return "home";
   if (pathname === PERSONAL_PREFIX || pathname.startsWith(`${PERSONAL_PREFIX}/`)) return "personal";
   if (pathname === BUSINESS_PREFIX || pathname.startsWith(`${BUSINESS_PREFIX}/`)) return "business";
   return "unknown";

@@ -56,10 +56,10 @@ export const HOME_FIXTURE_EMPTY: HomeCommandData = {
   revenueMovement: emptyModule("No revenue movement.", "Opportunities appear here without inventing forecasts."),
   weeklyReset: emptyModule("Weekly Reset", `Next review day is ${davidCraigInstance.reviewDay}.`),
   askCraigOs: {
-    state: "empty",
+    state: "populated",
     title: "Ask Craig OS",
-    body: "Conversational operating support is scheduled after this wave.",
-    items: [{ label: "Ask Craig OS", href: COMMAND_SURFACE_ROUTES.home, available: false }],
+    body: "Conversational operating intelligence with governed Capture handoff.",
+    items: [{ label: "Ask Craig OS", href: COMMAND_SURFACE_ROUTES.ask, available: true }],
   },
   utility: {
     state: "empty",

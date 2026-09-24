@@ -479,7 +479,7 @@ div.media-player { aspect-ratio: 16 / 9; }
   --p15-elevated: #1b222c;
 }
 .p15-header { display:grid; grid-template-columns:minmax(0,1fr) auto; gap:.75rem 1rem; align-items:start; padding-bottom:1rem; border-bottom:1px solid var(--p15-line); }
-.p15-header-actions { display:flex; justify-content:flex-end; padding-top:.15rem; }
+.p15-header-actions { display:flex; justify-content:flex-end; gap:.45rem; flex-wrap:wrap; padding-top:.15rem; }
 .p15-capture-trigger {
   min-height:44px; min-width:44px; padding:.65rem 1rem; border:1px solid color-mix(in srgb, var(--p15-accent) 55%, var(--p15-line));
   border-radius:.7rem; background:color-mix(in srgb, var(--p15-accent) 14%, var(--p15-surface)); color:var(--p15-ink);
@@ -557,6 +557,84 @@ div.media-player { aspect-ratio: 16 / 9; }
 .p15-capture-actions button:disabled { opacity:.55; cursor:not-allowed; }
 @media (prefers-reduced-motion: reduce) {
   .p15-capture-sheet { animation:none; }
+}
+.p15-ask-trigger {
+  min-height:44px; min-width:44px; padding:.65rem 1rem; border:1px solid var(--p15-line);
+  border-radius:.7rem; background:var(--p15-surface); color:var(--p15-ink);
+  font-family:var(--p15-sans); font-size:.78rem; font-weight:720; letter-spacing:.04em; text-transform:uppercase; cursor:pointer;
+}
+.p15-ask-trigger:hover { border-color:var(--p15-accent); }
+.p15-ask-backdrop {
+  position:fixed; inset:0; z-index:50; display:grid; place-items:end center; padding:1rem;
+  background:rgba(10,12,16,.48); backdrop-filter:blur(2px);
+}
+.p15-ask-sheet {
+  width:min(100%,38rem); max-height:min(92dvh,48rem); overflow:auto; padding:1.25rem 1.25rem 1.4rem;
+  border:1px solid var(--p15-line); border-radius:1.15rem 1.15rem .9rem .9rem;
+  background:var(--p15-elevated); color:var(--p15-ink); box-shadow:0 28px 90px rgba(0,0,0,.32);
+  animation:p15-enter 220ms ease-out; display:grid; gap:.9rem;
+}
+.p15-ask-head { display:flex; justify-content:space-between; gap:1rem; }
+.p15-ask-head h2 { margin:.2rem 0 0; font-size:clamp(1.35rem, 2.8vw, 1.75rem); letter-spacing:-.03em; }
+.p15-ask-close {
+  min-height:44px; min-width:44px; border:1px solid var(--p15-line); border-radius:.65rem;
+  background:transparent; color:var(--p15-ink); font-family:var(--p15-sans); font-size:.85rem; cursor:pointer; padding:.5rem .8rem;
+}
+.p15-ask-guidance { margin:0; color:var(--p15-muted); font-family:var(--p15-sans); line-height:1.5; }
+.p15-ask-thread {
+  display:grid; gap:.85rem; min-height:12rem; max-height:min(48dvh,22rem); overflow:auto;
+  padding:.85rem; border:1px solid var(--p15-line); border-radius:.9rem; background:var(--p15-surface);
+}
+.p15-ask-empty { color:var(--p15-muted); font-family:var(--p15-sans); line-height:1.5; }
+.p15-ask-empty ul { margin:.6rem 0 0; padding-left:1.1rem; }
+.p15-ask-message { display:grid; gap:.35rem; }
+.p15-ask-role { margin:0; color:var(--p15-muted); font-family:var(--p15-sans); font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; }
+.p15-ask-body { margin:0; white-space:pre-wrap; font-family:var(--p15-sans); line-height:1.55; }
+.p15-ask-message-user .p15-ask-body { color:var(--p15-ink); }
+.p15-ask-citations { list-style:none; margin:0; padding:0; display:grid; gap:.35rem; }
+.p15-ask-citations li {
+  display:flex; flex-wrap:wrap; gap:.35rem .75rem; align-items:baseline;
+  padding:.45rem 0; border-top:1px solid var(--p15-line); font-family:var(--p15-sans); font-size:.85rem;
+}
+.p15-ask-citations a { color:var(--p15-ink); }
+.p15-ask-citations span { color:var(--p15-muted); font-size:.72rem; letter-spacing:.04em; text-transform:uppercase; }
+.p15-ask-proposal {
+  display:grid; gap:.45rem; padding:.85rem; border:1px solid color-mix(in srgb, var(--p15-accent) 40%, var(--p15-line));
+  border-radius:.8rem; background:color-mix(in srgb, var(--p15-accent) 10%, var(--p15-surface));
+}
+.p15-ask-proposal strong { font-size:1rem; letter-spacing:-.02em; }
+.p15-ask-proposal p { margin:0; font-family:var(--p15-sans); line-height:1.45; }
+.p15-ask-proposal-meta { color:var(--p15-muted); font-size:.78rem; text-transform:capitalize; }
+.p15-ask-proposal-rationale { color:var(--p15-muted); font-size:.88rem; }
+.p15-ask-thinking { margin:0; color:var(--p15-muted); font-family:var(--p15-sans); font-size:.88rem; }
+.p15-ask-error { margin:0; color:var(--p15-critical); font-family:var(--p15-sans); font-size:.88rem; }
+.p15-ask-composer { display:grid; gap:.75rem; }
+.p15-ask-field { display:grid; gap:.35rem; font-family:var(--p15-sans); }
+.p15-ask-field > span { color:var(--p15-muted); font-size:.72rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; }
+.p15-ask-field textarea {
+  width:100%; min-height:5rem; padding:.7rem .85rem; border:1px solid var(--p15-line); border-radius:.7rem;
+  background:var(--p15-surface); color:var(--p15-ink); font:inherit; resize:vertical;
+}
+.p15-ask-actions { display:flex; flex-wrap:wrap; gap:.55rem; }
+.p15-ask-actions button {
+  min-height:44px; display:inline-flex; align-items:center; padding:.65rem .95rem; border:1px solid var(--p15-line);
+  border-radius:.7rem; background:var(--p15-surface); color:var(--p15-ink);
+  font-family:var(--p15-sans); font-size:.85rem; cursor:pointer;
+}
+.p15-ask-primary {
+  border-color:color-mix(in srgb, var(--p15-accent) 55%, var(--p15-line)) !important;
+  background:color-mix(in srgb, var(--p15-accent) 18%, var(--p15-surface)) !important;
+  font-weight:700;
+}
+.p15-ask-actions button:disabled,.p15-ask-field textarea:disabled { opacity:.55; cursor:not-allowed; }
+.p15-ask-trigger:focus-visible,.p15-ask-close:focus-visible,.p15-ask-actions button:focus-visible,.p15-ask-field textarea:focus {
+  outline:2px solid color-mix(in srgb, var(--p15-accent) 70%, white); outline-offset:2px;
+}
+.p15-ask-page-copy { margin-top:1.5rem; max-width:40rem; }
+.p15-ask-page-copy h2 { margin:.35rem 0 .75rem; font-size:clamp(1.5rem, 3vw, 2rem); letter-spacing:-.03em; }
+.p15-ask-page-copy p { margin:0; color:var(--p15-muted); font-family:var(--p15-sans); line-height:1.55; }
+@media (prefers-reduced-motion: reduce) {
+  .p15-ask-sheet { animation:none; }
 }
 .p15-brand { margin:0; color:var(--p15-accent); font-family:var(--p15-sans); font-size:.78rem; font-weight:700; letter-spacing:.04em; }
 .p15-header h1 { margin:0; font-size:clamp(1.85rem, 3.8vw, 2.75rem); letter-spacing:-.045em; line-height:1.05; }

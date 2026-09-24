@@ -6,6 +6,7 @@ import { COMMAND_SURFACE_ROUTES } from "@/lib/phase15/routes";
 import { PERSONAL_NAV } from "@/lib/phase15/nav";
 import type { CommandRecord, PersonalCommandData } from "@/lib/phase15/ui-models";
 import { CaptureCommand } from "./capture-command";
+import { AskCommand } from "./ask-command";
 import { AppShell, CommandHeader, ContextSwitcher, NavigationRail } from "./shell";
 import {
   DeepEditLink,
@@ -80,7 +81,12 @@ export function PersonalCommandSurface({ surface }: { surface: PersonalSurface }
         eyebrow="Personal OS"
         title={meta.title}
         subtitle={meta.subtitle}
-        actions={<CaptureCommand surface={surface === "spiritual" ? "spiritual" : "personal"} />}
+        actions={
+          <div className="p15-header-actions">
+            <AskCommand surface={surface === "spiritual" ? "spiritual" : "personal"} />
+            <CaptureCommand surface={surface === "spiritual" ? "spiritual" : "personal"} />
+          </div>
+        }
       />
       <ContextSwitcher current="personal" />
       <NavigationRail items={PERSONAL_NAV} currentHref={href} />

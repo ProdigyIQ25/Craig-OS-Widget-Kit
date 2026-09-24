@@ -7,6 +7,7 @@ import { davidCraigInstance } from "@/lib/phase15/config";
 import { BUSINESS_NAV } from "@/lib/phase15/nav";
 import type { BusinessCommandData, CommandRecord } from "@/lib/phase15/ui-models";
 import { CaptureCommand } from "./capture-command";
+import { AskCommand } from "./ask-command";
 import { AppShell, CommandHeader, ContextSwitcher, NavigationRail } from "./shell";
 import {
   DeepEditLink,
@@ -104,7 +105,12 @@ export function BusinessCommandSurface({ surface }: { surface: BusinessSurface }
         eyebrow={davidCraigInstance.companyName}
         title={meta.title}
         subtitle={meta.subtitle}
-        actions={<CaptureCommand surface="business" />}
+        actions={
+          <div className="p15-header-actions">
+            <AskCommand surface="business" />
+            <CaptureCommand surface="business" />
+          </div>
+        }
       />
       <ContextSwitcher current="business" />
       <NavigationRail items={BUSINESS_NAV} currentHref={href} />

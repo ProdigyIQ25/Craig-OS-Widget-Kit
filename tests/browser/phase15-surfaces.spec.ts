@@ -33,7 +33,8 @@ test("home empty populated unavailable and retry", async ({ page }) => {
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1, name: "Command Center" })).toBeVisible();
   await expect(page.getByText("Nothing requires your attention right now.")).toBeVisible();
-  await expect(page.getByText(/Ask Craig OS|Write path reserved|Supporting surfaces/i)).toHaveCount(0);
+  await expect(page.getByRole("button", { name: "Ask Craig OS" })).toBeVisible();
+  await expect(page.getByText(/Write path reserved|Supporting surfaces/i)).toHaveCount(0);
   await expect(page.locator(".p15-record")).toHaveCount(0);
 
   await mockHome(page, envelope(HOME_FIXTURE_POPULATED));

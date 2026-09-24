@@ -40,10 +40,24 @@ function defaultContext(from: "home" | "personal" | "business" | "spiritual"): C
   return "personal";
 }
 
+export type CaptureSeed = {
+  context: CaptureContext;
+  destinationKey: CaptureDestinationKey;
+  title: string;
+  explicitSpiritualSave?: boolean;
+  startAtPreview?: boolean;
+};
+
 export function CaptureCommand({
   surface,
+  seed = null,
+  onSeedConsumed,
+  hideTrigger = false,
 }: {
   surface: "home" | "personal" | "business" | "spiritual";
+  seed?: CaptureSeed | null;
+  onSeedConsumed?: () => void;
+  hideTrigger?: boolean;
 }) {
   const titleId = useId();
   const dialogTitleId = useId();
@@ -95,8 +109,24 @@ export function CaptureCommand({
   };
 
   useEffect(() => {
-    if (!open) return;
+    if (!seed) return;
+    setContext(seed.context);
+    setDestinationKey(seed.destinationKey);
+    setPayload({ title: seed.title });
+    setExplicitSpiritualSave(seed.explicitSpiritualSave === true);
+    setValidationMessage(null);
+    setResult(null);
+    setExecuting(false);
+    locked.current = false;
     idempotencyKey.current = crypto.randomUUID();
+    setStep(seed.startAtPreview ? "preview" : "compose");
+    setOpen(true);
+    onSeedConsumed?.();
+  }, [seed, onSeedConsumed]);
+
+  useEffect(() => {
+    if (!open) return;
+    if (!idempotencyKey.current) idempotencyKey.current = crypto.randomUUID();
     const timer = window.setTimeout(() => titleRef.current?.focus(), 0);
     return () => window.clearTimeout(timer);
   }, [open]);
@@ -197,17 +227,19 @@ export function CaptureCommand({
 
   return (
     <>
-      <button
-        type="button"
-        className="p15-capture-trigger"
-        data-capture-entry="true"
-        onClick={() => {
-          reset();
-          setOpen(true);
-        }}
-      >
-        Capture
-      </button>
+      {hideTrigger ? null : (
+        <button
+          type="button"
+          className="p15-capture-trigger"
+          data-capture-entry="true"
+          onClick={() => {
+            reset();
+            setOpen(true);
+          }}
+        >
+          Capture
+        </button>
+      )}
 
       {open ? (
         <div

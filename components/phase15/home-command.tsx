@@ -6,6 +6,7 @@ import { COMMAND_SURFACE_ROUTES } from "@/lib/phase15/routes";
 import { davidCraigInstance } from "@/lib/phase15/config";
 import type { CommandRecord, HomeCommandData } from "@/lib/phase15/ui-models";
 import { CaptureCommand } from "./capture-command";
+import { AskCommand } from "./ask-command";
 import { AppShell, CommandHeader, ContextSwitcher } from "./shell";
 import {
   DeepEditLink,
@@ -49,7 +50,12 @@ export function HomeCommandCenter() {
         eyebrow={davidCraigInstance.productName}
         title="Command Center"
         subtitle="What requires you. What you are focused on. What is moving."
-        actions={<CaptureCommand surface="home" />}
+        actions={
+          <div className="p15-header-actions">
+            <AskCommand surface="home" />
+            <CaptureCommand surface="home" />
+          </div>
+        }
       />
       <ContextSwitcher current="home" />
 

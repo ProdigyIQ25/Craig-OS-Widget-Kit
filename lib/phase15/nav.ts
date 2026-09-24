@@ -8,6 +8,7 @@ export type NavItem = {
 };
 
 export const HOME_UTILITY: NavItem[] = [
+  { id: "ask", label: "Ask Craig OS", href: COMMAND_SURFACE_ROUTES.ask },
   { id: "media", label: "Media Theater", href: "/os/media" },
   { id: "widgets", label: "Widgets", href: "/widgets/demo" },
 ];
