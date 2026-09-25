@@ -4,13 +4,13 @@ const contentSecurityPolicy = [
   "default-src 'self'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors https://app.notion.com https://*.notion.com https://www.notion.so https://*.notion.so https://*.notion.site",
+  "frame-ancestors 'self' https://app.notion.com https://*.notion.com https://www.notion.so https://*.notion.so https://*.notion.site",
   "object-src 'none'",
   "script-src 'self' 'unsafe-inline'",
   "style-src 'self' 'unsafe-inline'",
   "img-src 'self' data:",
   "connect-src 'self'",
-  "frame-src https://www.youtube-nocookie.com https://open.spotify.com https://player.vimeo.com https://www.loom.com",
+  "frame-src 'self' https://www.youtube-nocookie.com https://open.spotify.com https://player.vimeo.com https://www.loom.com",
   "media-src 'self' https:",
 ].join("; ");
 

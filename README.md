@@ -2,7 +2,21 @@
 
 Secure, independently deployable widgets for Craig OS Notion surfaces.
 
-Version: `0.4.0`
+Version: `0.8.0`
+
+## XP-04 Governed Action Layer
+
+The Personal and Business command surfaces expose exactly 11 action-specific captures. Each route validates a fixed input contract, applies only its approved defaults, writes to one hard-coded canonical destination, rejects extra fields and invalid vocabularies, requires a same-origin signed CSRF session, rate-limits requests, and reuses successful idempotency results. The browser receives only minimal success metadata and refreshes the affected read model after a confirmed write.
+
+Writes use `NOTION_ACTION_TOKEN`, a separate server-only connection shared only with P03, P07, P08, P09, P10, B03, B05, B06, B07, B08, and B10. The existing `NOTION_TOKEN` remains read-only. P05, P06, P12, relations, destructive operations, generic database selection, and arbitrary properties are not exposed.
+
+## XP-03 Craig Media Theater
+
+`/os/media?mode=focus` is the expanded, reusable P11-backed media experience. The same component is embedded in Personal `FOCUS`, `SPIRITUAL`, `GROWTH`, and `BRAND` modes with mode-specific context, queue, presentation, and certified deep-link capture actions. It supports allowlisted YouTube, Vimeo, Loom, and Spotify embeds; direct audio/video; public podcast audio; and an external-only fallback for unsupported HTTPS providers. Autoplay is off, only one player is mounted, mode/selection changes retire the prior player, and no Notion write path or new database access is present.
+
+## XP-02 Operating Mode Engine
+
+The existing Personal and Business command routes now host one shared, URL-addressable operating-mode engine. Personal modes are `COMMAND`, `FOCUS`, `SPIRITUAL`, `BRAND`, `GROWTH`, and `RESET`; Business modes are `EXECUTIVE`, `REVENUE`, `WORKTELLI`, `ENGINEERING`, `CLIENTS`, and `WORKFORCE`. Mode changes alter the shell hierarchy, actions, module order, navigation, media context, tone, and empty state while preserving the canonical read-only data boundary. Existing command URLs remain stable and select modes with a `?mode=` query parameter.
 
 ## BU-15 Wave 1
 
@@ -60,10 +74,11 @@ npx playwright test
 
 Browser → widget → server route → exact canonical Notion data source. The CSP permits framing by Notion origins, blocks objects and unneeded browser capabilities, and allows network connections only to this deployment from the browser. Optional URL parameters are sanitized and contain no credentials.
 
-No persistence, authentication platform, AI, automations, media-account integration, Notion writes, synthetic history, or additional widget families are included.
+No local persistence, authentication platform, AI, automations, media-account integration, synthetic history, or additional widget families are included. Notion insertion is limited to the XP-04 action registry and its dedicated connection.
 
 ## Known limitations
 
 - Notion controls the final embed height and surrounding chrome.
 - Empty P11 filters render a context-specific empty state until approved public URLs are supplied; autoplay and simulated playback are intentionally absent.
 - Live data widgets require the read-only Notion integration shared only with B03, B05, B07, B08, B09, B10, B11, and P11.
+- Idempotency uses an in-process pending lock plus Vercel Runtime Cache. The cache is bounded and regional, so a durable multi-region ledger would require a separately authorized persistence service.

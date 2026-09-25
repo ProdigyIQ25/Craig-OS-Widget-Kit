@@ -16,7 +16,7 @@ export async function GET(request:NextRequest){
       return NextResponse.json(failure("INVALID_FILTER","Use an approved mode, mediaType, and optional true/false favorite filter.","system"),{status:400,headers});
     }
     const favorite=rawFavorite==="true"?true:rawFavorite==="false"?false:null;
-    const items=deriveMedia(await queryActive("P11"),{modes,mediaTypes,favorite}).map(item=>({id:item.id,title:item.title,mediaType:item.mediaType,platform:item.platform,url:item.url,mode:item.mode,purpose:item.purpose,duration:item.duration,provider:item.provider,embedUrl:item.embedUrl}));
+    const items=deriveMedia(await queryActive("P11"),{modes,mediaTypes,favorite}).map(item=>({id:item.id,title:item.title,mediaType:item.mediaType,platform:item.platform,url:item.url,mode:item.mode,purpose:item.purpose,duration:item.duration,relatedContext:item.relatedContext,provider:item.provider,embedUrl:item.embedUrl}));
     return NextResponse.json(success({items,filters:{modes,mediaTypes,favorite}},"notion"),{headers});
   } catch(error) {
     const body=error instanceof NotionConfigurationError
